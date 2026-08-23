@@ -1,491 +1,1508 @@
-# Voice Profile: John Damask
-# Derived from LinkedIn posts and Substack excerpts.
-# This profile describes voice only — it is not content to reuse verbatim.
+# voice-profile.yaml
+#
+# Canonical representation of John Damask's writing voice.
+#
+# Built: 2026-08-23
+#
+# corpus:
+#   - source: ~/Downloads/john-damask-writing-examples.md
+#     samples: 9 (7 LinkedIn posts, 2 Substack excerpts)
+#     words: ~1778
+#     span: technology/AI commentary and tutorials; public professional audience
+#
+# Coverage caveat: the corpus is single-genre. Weights for register, formality,
+# and structure are well supported; variability estimates for private/informal
+# formats (email, Slack, chat) and for non-technical subject matter are
+# extrapolated and should be revised when such samples arrive. Features whose
+# variability is provisional are marked `provisional: true`.
+#
+# Spelling and grammar slips present in the corpus (e.g. "as good as as",
+# "If an llms.txt exist") are treated as errors, not voice features, and are
+# deliberately not encoded.
+#
+# revisions:
+#   - 2026-08-23: merged three findings from an independently derived profile
+#     (github.com/jbdamask/my-voice) built from the same corpus. Added
+#     product_mentions_without_pitch; added the chronological ordering rule to
+#     admits_own_missteps; scoped the pronoun boundary in
+#     direct_second_person_instruction. The other profile's claim that
+#     semicolons are absent from the corpus was checked and rejected: three
+#     occur, one in clean prose ("I didn't type any of it; Claude did").
+#   - 2026-08-23: rare_semicolons replaced by comfortable_semicolon_use after
+#     the author corrected it. Both this profile and the one it was compared
+#     against had read a low raw count in short-form posts as avoidance. Raw
+#     frequency is unreliable for punctuation in a short-form-only corpus;
+#     prefer the author's statement and the range of uses over the count.
+#   - 2026-08-23: plain_concrete_vocabulary confirmed directly by the author.
+#   - 2026-08-23: author confirmed "controlled enthusiasm" as his own framing;
+#     feature renamed from genuine_enthusiasm_as_default_register and the
+#     restraint promoted from a qualifier to a required component. Author also
+#     reported deliberately connecting paragraphs, which the corpus supports;
+#     added anaphoric_paragraph_handoff.
 
-- name: conclusion_first_structure
-  category: structure
-  weight: 0.85
-  variability: 0.30
-  description: >
-    States the point, observation, or claim up front, then backfills
-    context and justification. Rarely builds suspense toward a reveal.
-  signals:
-    - topic sentence carries the takeaway
-    - supporting detail follows rather than precedes the claim
-  do:
-    - lead with the observation or opinion
-    - explain reasoning after the claim, not before it
-  avoid:
-    - long throat-clearing before the point
-    - saving the main idea for the end
-  evidence:
-    - "DeepSeek's new AI coding harness boasts a neat innovation of hot-swappable plugins."
-    - "PSA: Protect API keys from exposure by coding agents"
+features:
 
-- name: personal_experiment_as_evidence
-  category: argumentation
-  weight: 0.90
-  variability: 0.20
-  description: >
-    Grounds claims in something he personally did — tested, built, asked
-    an AI, chatted with a tool — rather than citing outside authority
-    first. Personal trial is the primary form of proof.
-  signals:
-    - "I fired up..." / "I asked it to..." / "I chatted with Claude about..."
-    - first-person verbs of direct action preceding the conclusion
-  do:
-    - narrate a concrete action he took before stating what it proved
-    - use "I" as the evidentiary source
-  avoid:
-    - appeals to authority or studies as the primary proof
-    - abstract claims with no personal action behind them
-  evidence:
-    - "I regularly test coding agents on cloud servers by having them build video games."
-    - "I fired up Claude Code and told it to go read the Moltbook thread and get back to me."
-    - "I had some fun with Claude Fable this morning. I asked it to pull together historical job posting data..."
+  # ============================================================
+  # STRUCTURE
+  # ============================================================
 
-- name: self_deprecating_asides
-  category: humor
-  weight: 0.75
-  variability: 0.60
-  description: >
-    Undercuts his own expertise or effort with a quick, dry aside,
-    usually right after mentioning something technically impressive
-    or intimidating.
-  signals:
-    - jabs at his own understanding or competence
-    - placed immediately after a technical/complex reference
-  do:
-    - puncture a technical moment with brief self-deprecation
-    - keep the joke short — one line, not a bit
-  avoid:
-    - false modesty that undercuts the actual argument
-    - turning the aside into an extended riff
-  evidence:
-    - "Yeesh. My little brain has trouble just understanding the title...let alone the contents."
-    - "Yikes, I better sign my kid up for fall sports!"
+  - name: cold_open_with_the_claim
+    category: structure
+    weight: 0.95
+    variability: 0.10
+    description: >-
+      Opens with the substantive claim, observation, or scene in the first
+      sentence. There is no scene-setting, no framing of why the topic matters,
+      and no announcement of what the piece will cover. The reader is dropped
+      directly into the subject.
+    signals:
+      - first sentence carries real information
+      - no introductory or transitional opener
+      - no statement of intent or roadmap
+    do:
+      - lead with the specific thing you noticed, built, or disagree with
+      - name the product, paper, or event in the opening clause
+      - let the reason the topic matters emerge in the second paragraph
+    avoid:
+      - throat-clearing preambles
+      - In today's fast-moving landscape openers
+      - announcing the structure of the piece before delivering it
+      - rhetorical questions as an opening hook
+    evidence:
+      - >-
+        DeepSeek's new AI coding harness boasts a neat innovation of
+        hot-swappable plugins.
+      - >-
+        Just about any coding AI can make simple games these days.
+      - >-
+        Driving within your headlights applies to building software with AI
+        agents.
+      - >-
+        This New Years' Eve I told my wife, "If you thought my obsession with AI
+        was insufferable last year, just wait".
 
-- name: single_word_or_short_exclamations
-  category: rhythm
-  weight: 0.70
-  variability: 0.45
-  description: >
-    Uses very short, standalone exclamatory fragments as rhythmic
-    punctuation — often a full stop that's just one or two words plus
-    an exclamation point or ellipsis.
-  signals:
-    - "Yeesh.", "Pretty cool!", "Yikes,"
-    - fragments that break paragraph rhythm
-  do:
-    - drop in a short exclamatory fragment as a beat between ideas
-    - let it stand alone as its own sentence
-  avoid:
-    - stringing multiple exclamations together
-    - using it more than once or twice per piece
-  evidence:
-    - "Yeesh."
-    - "Pretty cool!"
+  - name: short_paragraph_blocks
+    category: structure
+    weight: 0.85
+    variability: 0.15
+    description: >-
+      Paragraphs run one to three sentences. Single-sentence paragraphs are
+      common and are used as structural beats, not just for emphasis. Paragraphs
+      of four or more sentences are rare and appear only when walking through
+      data.
+    signals:
+      - frequent one-sentence paragraphs
+      - white space between nearly every idea
+      - no paragraph exceeding roughly four sentences
+    do:
+      - break at every change of idea
+      - let a single sentence stand alone as its own paragraph
+      - keep the visual rhythm loose and scannable
+    avoid:
+      - dense multi-idea paragraphs
+      - stacking supporting detail into one long block
+    evidence:
+      - >-
+        This is another example of why I built the app, Now I Get It!
+      - >-
+        Pretty cool!
+      - >-
+        Still bullish on the power of human creativity.
+      - >-
+        There wasn't a good reason, so we ripped it out. I should have asked
+        that question first.
 
-- name: closing_zinger
-  category: structure
-  weight: 0.85
-  variability: 0.30
-  description: >
-    Ends pieces on a short, punchy line that either distills the
-    takeaway, pivots to a wry personal non-sequitur, or states a
-    plainspoken belief — never a formal summary or recap.
-  signals:
-    - final sentence is short relative to paragraph average
-    - closing often pivots away from the technical subject
-  do:
-    - end on one compact sentence
-    - let the ending carry either the thesis or a humanizing pivot
-  avoid:
-    - "In conclusion" or restated-summary endings
-    - trailing off with more supporting detail after the real ending
-  evidence:
-    - "Still bullish on the power of human creativity."
-    - "I should have asked that question first."
-    - "Yikes, I better sign my kid up for fall sports!"
+  - name: human_off_ramp_ending
+    category: structure
+    weight: 0.90
+    variability: 0.25
+    description: >-
+      Pieces end on a short, personal, often lighter line rather than a
+      conclusion. The closer is typically one sentence and does one of four
+      things: a joke, an admission, a forward-looking sentiment, or a plain
+      expression of delight. It never recaps the argument.
+    signals:
+      - final line is markedly shorter than the paragraph before it
+      - closer shifts from technical register to personal register
+      - no restatement of the main point
+    do:
+      - end on one short sentence that steps back from the subject
+      - close with delight, self-effacement, or a forward look
+      - let the closer be tonally lighter than what precedes it
+    avoid:
+      - summary paragraphs
+      - In conclusion or To wrap up
+      - restating the thesis
+      - ending on the last technical detail with no human beat
+    evidence:
+      - >-
+        Yikes, I better sign my kid up for fall sports!
+      - >-
+        Pretty cool!
+      - >-
+        Still bullish on the power of human creativity.
+      - >-
+        I should have asked that question first.
+      - >-
+        Honestly, I don't need all the math to get the concepts.
 
-- name: parenthetical_caveats
-  category: punctuation
-  weight: 0.70
-  variability: 0.25
-  description: >
-    Uses parentheses constantly to slip in a caveat, aside, or
-    clarifying scope-limiter without breaking the main sentence flow.
-  signals:
-    - "(e.g. ...)"
-    - "(I use AWS)"
-    - "(and even that can be a manual effort)"
-  do:
-    - tuck qualifiers and examples into parentheses mid-sentence
-    - use parentheses for honesty about limitations, not just asides
-  avoid:
-    - separate sentences for every caveat
-    - footnote-style disclaimers set apart from the text
-  evidence:
-    - "There are caveats around the data (e.g. limited to Indeed job postings, doesn't include layoffs, etc) but I just wanted something directional."
-    - "Porting the concept to the cloud (I use AWS) involves solving many problems"
+  - name: no_summary_recap
+    category: anti-patterns
+    weight: 0.70
+    variability: 0.15
+    description: >-
+      Never closes by recapitulating what was just said. Where a summary would
+      conventionally go, there is either the personal off-ramp or nothing at
+      all. The reader is trusted to have followed.
+    signals:
+      - absence of concluding recap
+      - absence of key takeaways sections
+      - final paragraph introduces a new note rather than consolidating
+    do:
+      - stop when the content is delivered
+      - trust the reader to retain the argument
+    avoid:
+      - TL;DR or Key takeaways blocks
+      - So to summarize
+      - repeating the opening claim at the end for symmetry
+    evidence:
+      - >-
+        I don't know where this will lead, but engineers are having time of
+        their lives building software products these days.
+      - >-
+        The last step was to upload the doc to Google's NotebookLM and click the
+        Video Overview button.
 
-- name: explicit_data_caveats
-  category: argumentation
-  weight: 0.65
-  variability: 0.40
-  description: >
-    When presenting data or a chart, proactively states what the data
-    can and cannot support before drawing a conclusion from it.
-  signals:
-    - "the chart can't answer..." / "It can answer..."
-    - naming the data source's specific limitation
-  do:
-    - state the boundary of what the evidence proves before interpreting it
-    - separate "what this shows" from "what this doesn't show"
-  avoid:
-    - presenting a chart or stat as more conclusive than the data supports
-  evidence:
-    - "Because each series is indexed separately, the lines show change, not size."
-    - "Indeed doesn't publish raw counts, so the chart can't answer \"which occupation has more openings.\""
+  - name: bare_label_section_markers
+    category: structure
+    weight: 0.60
+    variability: 0.55
+    provisional: true
+    description: >-
+      In longer pieces, sections are marked with a bare word or phrase followed
+      by a colon on its own line, not with markdown headings or bold. The labels
+      are functional and unadorned.
+    signals:
+      - lines such as "Steps:" or "Observations:" standing alone
+      - no heading syntax within the body of a post
+      - labels are plain nouns, not questions or teasers
+    do:
+      - use a plain label plus colon when a section needs naming
+      - keep labels literal and short
+    avoid:
+      - markdown headings inside short-form posts
+      - clever or teasing section titles
+      - bolded pseudo-headings
+    evidence:
+      - >-
+        Steps:
+      - >-
+        How to read the chart:
+      - >-
+        Observations:
 
-- name: plain_language_translation
-  category: diction
-  weight: 0.85
-  variability: 0.20
-  description: >
-    Actively strips jargon out of technical or academic material and
-    restates it in ordinary words, often naming the translation act
-    itself as the point.
-  signals:
-    - "the gist is"
-    - explicit contrast between the jargon-heavy original and his plain restatement
-  do:
-    - restate technical concepts in everyday words
-    - name the simplification explicitly ("the gist is...")
-  avoid:
-    - reproducing jargon without unpacking it
-    - assuming reader familiarity with technical terms
-  evidence:
-    - "Anyway, the gist is that LLMs have limited memory, called their \"context window\"..."
-    - "I simply uploaded the paper, requested a non-technical translation and in a couple of minutes I had something I could understand."
+  - name: numbered_procedural_steps
+    category: structure
+    weight: 0.65
+    variability: 0.70
+    description: >-
+      Instructional content is delivered as a numbered list of imperative steps,
+      often including the literal text to type or paste. Steps are terse, and
+      alternatives are noted in parentheses rather than branching the list.
+    signals:
+      - numbered lists with imperative verbs
+      - verbatim prompts embedded inside a step
+      - parenthetical alternatives instead of sub-branches
+    do:
+      - number the steps and start each with a verb
+      - include the exact command or prompt to use
+      - put substitutions in parentheses on the same line
+    avoid:
+      - prose walkthroughs of a procedure
+      - explaining each step's rationale inside the step
+      - nested sub-steps
+    evidence:
+      - >-
+        1. Sign up for a free Jira account (Notion works, too)
+      - >-
+        4. Tell Claude: "Pull 20 diverse emails from my Inbox and build a
+        taxonomy for classifying future emails. Focus on emails that require my
+        attention or action."
+      - >-
+        6. Tweak as needed
 
-- name: conversational_connectors
-  category: syntax
-  weight: 0.60
-  variability: 0.35
-  description: >
-    Opens sentences or paragraphs with informal spoken-style
-    connectors rather than formal transitions.
-  signals:
-    - "Yea, so..."
-    - "Anyway,"
-    - "Honestly,"
-  do:
-    - open with casual connectors like "so," "anyway," "honestly"
-    - let paragraphs start mid-thought, as if continuing a conversation
-  avoid:
-    - formal transitions like "Furthermore" or "In addition"
-  evidence:
-    - "Yea, so I'm not buying into the narrative about AI killing software engineering jobs."
-    - "Anyway, the gist is that LLMs have limited memory..."
+  - name: parallel_gerund_bullet_lists
+    category: structure
+    weight: 0.50
+    variability: 0.65
+    description: >-
+      When enumerating capabilities or behaviors rather than steps, bullets open
+      with a gerund and hold that grammatical shape across the whole list.
+      Individual bullets may carry a concrete example appended after a period.
+    signals:
+      - every bullet opens with an -ing verb
+      - strict grammatical parallelism across items
+      - occasional concrete example trailing a bullet
+    do:
+      - hold one grammatical form for every item in a list
+      - open capability bullets with a gerund
+      - append a specific instance to a bullet when the abstraction needs grounding
+    avoid:
+      - mixing sentence fragments and full sentences within one list
+      - bullets that restate each other at different altitudes
+    evidence:
+      - >-
+        Translating simple feature requests into an overall game engine.
+      - >-
+        Anticipating places the app could break and adding safeguards and
+        recovery behavior.
+      - >-
+        Applying domain-specific intuition. For example, the fishing game is
+        meant to be a retro 8-bit Atari-like game and the agent nailed it.
 
-- name: numbered_stepwise_howto
-  category: structure
-  weight: 0.75
-  variability: 0.40
-  description: >
-    When explaining a process, switches from prose into a literal
-    numbered list of imperative steps, often including exact phrases
-    to type into a tool.
-  signals:
-    - "Steps:" header
-    - imperative numbered items, some containing verbatim quoted commands
-  do:
-    - break how-to content into short numbered imperative steps
-    - include exact wording the reader can copy/paste when relevant
-  avoid:
-    - narrating a process purely in paragraph form
-    - vague steps without concrete actions
-  evidence:
-    - "1. Sign up for a free Jira account (Notion works, too)"
-    - "4. Tell Claude: \"Pull 20 diverse emails from my Inbox and build a taxonomy...\""
+  # ============================================================
+  # TONE
+  # ============================================================
 
-- name: quoted_ai_dialogue_as_artifact
-  category: rhetoric
-  weight: 0.55
-  variability: 0.55
-  description: >
-    Inserts a verbatim quoted message from an AI tool as evidence or
-    color, letting the quote do rhetorical work rather than
-    paraphrasing it.
-  signals:
-    - block-quoted first-person AI output
-    - framed as "Here's a recent contrite Claude message,"
-  do:
-    - quote the tool's own output directly when it makes the point better than paraphrase
-  avoid:
-    - paraphrasing an AI's output when the verbatim version is more telling
-  evidence:
-    - "\"That command printed your ANTHROPIC_API_KEY in full into this transcript. My redaction pattern didn't match...\""
+  - name: controlled_enthusiasm
+    category: tone
+    weight: 0.90
+    variability: 0.35
+    # Author-confirmed 2026-08-23, in his own term: "controlled enthusiasm."
+    # The control is not a dilution of the enthusiasm, it is a component of it.
+    # Both halves must be present. Enthusiasm without the restraint reads as
+    # hype and is wrong; restraint without the enthusiasm reads as detached
+    # and is equally wrong.
+    author_confirmed: true
+    description: >-
+      The baseline emotional register is real enjoyment held under deliberate
+      control. Difficulty is framed as the reason something is fun rather than
+      as a burden, and he states plainly that he is having a good time. The
+      control shows in the vocabulary, which stays small, plain, and
+      proportionate. Delight is reported as a fact about his experience rather
+      than urged on the reader.
 
-- name: bulleted_capability_lists
-  category: structure
-  weight: 0.55
-  variability: 0.50
-  description: >
-    Uses short unordered bullets to enumerate parallel observations or
-    capabilities, each a compact phrase rather than a full paragraph.
-  signals:
-    - bullets beginning with a gerund or short noun phrase
-    - parallel grammatical structure across bullets
-  do:
-    - keep each bullet to one compact line
-    - keep grammatical form parallel across the list
-  avoid:
-    - mixing full paragraphs into a bulleted list
-  evidence:
-    - "Translating simple feature requests into an overall game engine."
-    - "Anticipating places the app could break and adding safeguards and recovery behavior."
+      The tell is the gap between how interesting the subject clearly is to him
+      and how restrained the words describing it are. A genuinely exciting
+      result gets "Pretty cool!" and nothing more.
+    signals:
+      - explicit but plainly worded statements of enjoyment
+      - hard problems described as the appeal rather than the obstacle
+      - enthusiasm markers that are shorter than the material would license
+      - no superlatives anywhere near the thing he is excited about
+    do:
+      - say directly that something was fun or interesting
+      - frame complexity as what makes the work enjoyable
+      - keep the vocabulary of enthusiasm small and plain
+      - let the specificity of the detail carry the excitement, not the adjectives
+      - undersell the reaction relative to the result
+    avoid:
+      - superlatives such as incredible, revolutionary, or game-changing
+      - manufactured excitement about routine things
+      - exclamation-heavy hype
+      - flattening the enthusiasm out entirely into neutral reporting
+    evidence:
+      - >-
+        I've been having a lot of fun building an enterprise application that
+        uses AI-friendly information stores.
+      - >-
+        Porting the concept to the cloud (I use AWS) involves solving many
+        problems, which is why I'm having such a good time.
+      - >-
+        Pretty cool!
+      - >-
+        To get past intuition, I had some fun with Claude Fable this morning.
 
-- name: understated_enthusiasm
-  category: tone
-  weight: 0.60
-  variability: 0.40
-  description: >
-    Signals genuine excitement in small, plain bursts ("Pretty cool!",
-    "I'm having such a good time") rather than hype language or
-    superlatives.
-  signals:
-    - short plain enthusiasm markers
-    - absence of superlatives like "amazing," "incredible," "game-changing"
-  do:
-    - express enthusiasm in short, plain phrases
-    - keep excitement understated rather than hyped
-  avoid:
-    - marketing-style superlatives
-    - exclamation-heavy hype language
-  evidence:
-    - "Pretty cool!"
-    - "which is why I'm having such a good time"
+  - name: self_deprecating_humor
+    category: humor
+    weight: 0.75
+    variability: 0.55
+    description: >-
+      Positions himself as the least impressive party in the room, usually by
+      undercutting his own comprehension or discipline. The joke lands on
+      himself, never on another person or company, and is delivered in a single
+      clause without setup.
+    signals:
+      - claims of limited understanding
+      - admissions of obsession or excess
+      - one-clause jokes at his own expense
+    do:
+      - undercut your own expertise when the material is genuinely hard
+      - make yourself the butt of the joke
+      - keep it to one clause and move on
+    avoid:
+      - false modesty about things you clearly know well
+      - jokes at the expense of named people or companies
+      - extended comic bits
+    evidence:
+      - >-
+        Yeesh. My little brain has trouble just understanding the
+        title...let alone the contents.
+      - >-
+        This New Years' Eve I told my wife, "If you thought my obsession with AI
+        was insufferable last year, just wait".
+      - >-
+        Yikes, I better sign my kid up for fall sports!
 
-- name: hedged_opinions
-  category: stance
-  weight: 0.65
-  variability: 0.35
-  description: >
-    States an opinion but immediately concedes uncertainty or
-    alternative explanations rather than arguing it as settled fact.
-  signals:
-    - "I mean, maybe, but..."
-    - "I don't know where this will lead, but..."
-  do:
-    - state a view, then explicitly acknowledge what could be wrong about it
-    - avoid presenting personal takes as definitive conclusions
-  avoid:
-    - asserting opinions as unqualified fact
-  evidence:
-    - "I mean, maybe, but the post-COVID economy and current global craziness seem like more likely drivers."
-    - "I don't know where this will lead, but engineers are having time of their lives building software products these days."
+  - name: casual_interjections
+    category: diction
+    weight: 0.70
+    variability: 0.40
+    description: >-
+      Uses short spoken-register interjections as standalone reactions or
+      sentence openers. They function as tonal punctuation, marking a shift from
+      exposition into the writer's own reaction.
+    signals:
+      - one-word reactions set off as their own sentence
+      - spoken-register openers
+      - sound-effect words used as verbs or beats
+    do:
+      - drop in a one-word reaction where a spoken aside would land
+      - use plain interjections rather than internet slang
+    avoid:
+      - internet-native slang and abbreviations
+      - emoji as tonal markers
+      - stacking interjections
+    evidence:
+      - >-
+        Yeesh.
+      - >-
+        Yikes, I better sign my kid up for fall sports!
+      - >-
+        Yea, so I'm not buying into the narrative about AI killing software
+        engineering jobs.
+      - >-
+        And when it exhausts, poof. That's it.
+      - >-
+        Honestly, I don't need all the math to get the concepts.
 
-- name: product_mentions_woven_in
-  category: reader_relationship
-  weight: 0.50
-  variability: 0.50
-  description: >
-    References his own products/projects as a natural aside within a
-    larger observation, not as a pitch — the mention reads as
-    incidental evidence rather than promotion.
-  signals:
-    - product name dropped mid-anecdote
-    - no calls to action or sales language around the mention
-  do:
-    - mention his own tools as a natural example, not a sales pitch
-    - skip calls-to-action after naming a product
-  avoid:
-    - promotional language, pricing, or explicit asks to try the product
-  evidence:
-    - "This is another example of why I built the app, Now I Get It!"
-    - "which is why I'm having such a good time"
+  - name: soft_edged_contrarianism
+    category: stance
+    weight: 0.55
+    variability: 0.60
+    description: >-
+      Disagrees with prevailing narratives, but concedes the opposing case in
+      the same breath before proceeding. The disagreement is stated as personal
+      position rather than as correction of others, and no one is named as
+      wrong.
+    signals:
+      - first-person framing of disagreement
+      - immediate concession clause after the disagreement
+      - no named target
+    do:
+      - state disagreement as your own read, not as a correction
+      - concede the plausible version of the opposing view immediately
+      - move to evidence rather than dwelling on the disagreement
+    avoid:
+      - naming and criticizing specific people or firms
+      - declaring a consensus view simply wrong
+      - takedown framing
+    evidence:
+      - >-
+        Yea, so I'm not buying into the narrative about AI killing software
+        engineering jobs. I mean, maybe, but the post-COVID economy and current
+        global craziness seem like more likely drivers.
 
-- name: reflective_mistake_narrative
-  category: structure
-  weight: 0.70
-  variability: 0.45
-  description: >
-    Recounts a technical misstep as a short arc — noticed something
-    odd, chased it, burned effort, then names the lesson learned in
-    plain terms at the end.
-  signals:
-    - sequential past-tense narration of a debugging/investigation process
-    - closing self-directed lesson ("I should have asked that question first")
-  do:
-    - narrate the mistake chronologically before naming the lesson
-    - keep the lesson itself to one short sentence
-  avoid:
-    - stating the lesson before the story
-    - over-explaining the technical minutiae of the mistake
-  evidence:
-    - "I saw something strange in the logs, isolated the cause, burned a bunch of tokens fixing it, and then finally asked, \"Why do we have this?\""
-    - "There wasn't a good reason, so we ripped it out. I should have asked that question first."
+  # ============================================================
+  # STANCE AND ARGUMENTATION
+  # ============================================================
 
-- name: metaphor_as_frame
-  category: rhetoric
-  weight: 0.55
-  variability: 0.55
-  description: >
-    Occasionally opens a piece with a simple physical-world metaphor
-    that frames the entire argument, then explicitly maps the metaphor
-    onto the technical subject.
-  signals:
-    - a short concrete metaphor stated as a general truth, then applied
-  do:
-    - open with a plain analogy before connecting it to the technical point
-  avoid:
-    - elaborate or extended metaphors that overstay their welcome
-  evidence:
-    - "Driving within your headlights applies to building software with AI agents. It means staying close enough to the AI to react to its decisions."
+  - name: practitioner_evidence_over_authority
+    category: argumentation
+    weight: 0.90
+    variability: 0.15
+    description: >-
+      Claims are grounded in something the writer personally built, ran, or
+      watched happen, usually recently. Authority comes from having done the
+      thing, not from citation, credentials, or appeal to consensus. Even when
+      a paper or standard is the subject, the argument turns on his own use of
+      it.
+    signals:
+      - first-person account of a specific session or build
+      - the demonstration is the argument
+      - external sources introduced as material he acted on
+    do:
+      - argue from something you actually did
+      - describe the specific run, build, or test
+      - use external sources as inputs to your own experiment
+    avoid:
+      - arguing from studies or authorities you did not engage with
+      - appeals to what everyone knows
+      - abstract argument with no worked instance
+    evidence:
+      - >-
+        I regularly test coding agents on cloud servers by having them build
+        video games.
+      - >-
+        I simply uploaded the paper, requested a non-technical translation and
+        in a couple of minutes I had something I could understand.
+      - >-
+        Combine this with my own experience, which shows that while AI beats
+        humans at coding, engineering is still highly human.
+      - >-
+        I fired up Claude Code and told it to go read the Moltbook thread and
+        get back to me.
 
-- name: rhetorical_self_questioning
-  category: humor
-  weight: 0.45
-  variability: 0.65
-  description: >
-    Inserts a brief, parenthetical rhetorical question to himself,
-    often mocking his own credulity or assumptions.
-  signals:
-    - parenthetical questions like "(right?)"
-    - a stated assumption immediately undercut by doubt
-  do:
-    - use a short bracketed self-question to undercut a claim playfully
-  avoid:
-    - overusing this — it should feel like a rare wink, not a tic
-  evidence:
-    - "Of course it's all nonsense. Agents are just pushing words around on Moltbook and not actually talking about their home life. Right? (right?)"
+  - name: problem_then_personal_demo
+    category: rhetoric
+    weight: 0.90
+    variability: 0.25
+    description: >-
+      The dominant shape of a piece is a three-beat move. State the thing that
+      exists or the problem it solves, explain why it matters in plain terms,
+      then show what the writer personally did about it. The demonstration
+      carries the persuasive weight and arrives late.
+    signals:
+      - opening observation followed by a why-this-matters paragraph
+      - pivot into first-person account
+      - resolution is a working result, not a conclusion
+    do:
+      - open on the artifact or problem
+      - explain the stakes in one short paragraph
+      - close the loop with what you built or ran
+    avoid:
+      - leading with your own action before establishing the subject
+      - stating stakes without demonstrating anything
+      - ending on abstraction
+    evidence:
+      - >-
+        The problem they're solving for is that AI agents have to be restarted
+        if a plugin is added or removed. This is inefficient because agents take
+        a bit of time to remember things in a fresh session (and even that can be
+        a manual effort).
+      - >-
+        This is another example of why I built the app, Now I Get It!
+      - >-
+        The rabbit hole this week was caused by my coding agent and me
+        optimizing something that shouldn't have existed in the first place.
 
-- name: casual_cultural_asides
-  category: personality
-  weight: 0.45
-  variability: 0.60
-  description: >
-    Drops in an unrelated personal or domestic detail as a closing
-    beat, humanizing an otherwise technical post.
-  signals:
-    - sudden pivot to family/home life at the end of a technical point
-  do:
-    - close occasionally with a small personal, non-technical detail
-  avoid:
-    - forcing a personal aside into every piece
-  evidence:
-    - "Yikes, I better sign my kid up for fall sports!"
-    - "This New Years' Eve I told my wife, \"If you thought my obsession with AI was insufferable last year, just wait\"."
+  - name: bounded_claims_and_caveats
+    category: argumentation
+    weight: 0.85
+    variability: 0.30
+    description: >-
+      Preemptively marks the limits of his own evidence before anyone can
+      object. Caveats are brief, specific, and stated as a matter of fact
+      rather than as anxiety, and are usually followed immediately by a
+      statement of what he was actually after.
+    signals:
+      - explicit limitations of data or method
+      - a stated purpose that the limitation does not undermine
+      - hedging language attached to conclusions rather than observations
+    do:
+      - name the specific limitation and move on in the same paragraph
+      - say what level of confidence you were actually going for
+      - keep the caveat shorter than the claim it qualifies
+    avoid:
+      - blanket disclaimers
+      - apologizing for the limits of your evidence
+      - overstating confidence and letting readers find the holes
+    evidence:
+      - >-
+        There are caveats around the data (e.g. limited to Indeed job postings,
+        doesn't include layoffs, etc) but I just wanted something directional.
+      - >-
+        I don't know where this will lead, but engineers are having time of
+        their lives building software products these days.
+      - >-
+        Of course it's all nonsense. Agents are just pushing words around on
+        Moltbook and not actually talking about their home life. Right? (right?)
 
-- name: contraction_heavy_informality
-  category: syntax
-  weight: 0.60
-  variability: 0.20
-  description: >
-    Writes with heavy, consistent use of contractions and informal
-    sentence construction rather than formal register, regardless of
-    subject complexity.
-  signals:
-    - "I'm", "don't", "it's", "wasn't", "isn't"
-  do:
-    - use contractions throughout, even in technical explanations
-  avoid:
-    - formal, uncontracted phrasing ("I am", "it is not")
-  evidence:
-    - "I don't know where this will lead"
-    - "I'm not buying into the narrative"
+  - name: explicit_scope_of_evidence
+    category: argumentation
+    weight: 0.70
+    variability: 0.50
+    description: >-
+      When presenting data, states what the evidence cannot answer before
+      stating what it can. The negative and positive halves are often adjacent
+      sentences using the same construction, which reads as a deliberate
+      handrail for the reader rather than a hedge.
+    signals:
+      - a cannot-answer sentence followed by a can-answer sentence
+      - explicit correction of the likeliest misreading
+      - instructions for how to interpret a figure
+    do:
+      - name the misreading a reader is most likely to make and rule it out
+      - pair what the evidence cannot show with what it can
+      - explain the normalization or method before the findings
+    avoid:
+      - presenting a chart or number without saying what it measures
+      - letting an ambiguous comparison stand
+    evidence:
+      - >-
+        Because each series is indexed separately, the lines show change, not
+        size. HR sitting above software development does not mean there are more
+        HR openings than software openings.
+      - >-
+        Indeed doesn't publish raw counts, so the chart can't answer "which
+        occupation has more openings." It can answer how fast each market grew
+        or shrank, when it turned, and where it stands against its own February
+        2020 norm.
 
-- name: minimal_formal_framing
-  category: anti_patterns
-  weight: 0.55
-  variability: 0.25
-  description: >
-    Avoids institutional or corporate-blog conventions — no formal
-    greetings, no "In this post I will," no forced calls-to-action.
-  signals:
-    - absence of meta-announcements about the post's structure
-    - posts begin directly on the substantive topic
-  do:
-    - start directly on the subject
-    - skip meta-commentary about what the piece will cover
-  avoid:
-    - "In this post, I'll walk through..." style openers
-    - closing calls-to-action ("Let me know what you think below!")
-  evidence:
-    - "DeepSeek's new AI coding harness boasts a neat innovation of hot-swappable plugins."
-    - "A common request for AI workflows is turning emails into action items."
+  - name: admits_own_missteps
+    category: stance
+    weight: 0.80
+    variability: 0.50
+    description: >-
+      Reports his own mistakes plainly, including wasted effort, and names the
+      better move he failed to make. There is no defensiveness and no
+      self-flagellation. The admission is usually the punchline or the point of
+      the piece.
 
-- name: technical_precision_when_it_matters
-  category: diction
-  weight: 0.60
-  variability: 0.50
-  description: >
-    Switches into precise, exact numeric or technical language when
-    stating data results, even while the surrounding prose stays
-    casual — precision is reserved for the load-bearing facts.
-  signals:
-    - exact percentages and indexed values stated plainly
-    - precise technical terms used correctly without hedging when they matter
-  do:
-    - state exact figures and technical specifics plainly when they carry the argument
-    - keep surrounding commentary casual even when the data is precise
-  avoid:
-    - vague approximations where exact figures are the point
-    - over-explaining technical terms once precision is established
-  evidence:
-    - "Software development fell 74% peak-to-trough and human resources fell 66%."
-    - "API keys exported to your environment are visible by every process your shell spawns"
+      The ordering is fixed and load-bearing. The misstep is narrated as a
+      chronological arc first, compressed into a single sentence of sequential
+      past-tense clauses, and only then is the lesson named, in one short
+      sentence at the end. The lesson never comes first, and the technical
+      minutiae of the mistake are not elaborated.
+    signals:
+      - first-person account of wasted work
+      - a stated should-have
+      - mistake framed as the lesson rather than as an aside
+      - sequential past-tense clauses compressed into one sentence
+      - lesson withheld until after the narration
+    do:
+      - say what you got wrong and what it cost
+      - narrate the arc chronologically before naming the lesson
+      - compress the investigation into one sentence of sequential clauses
+      - name the question you should have asked earlier
+      - keep the lesson to one short sentence at the end
+      - let the mistake be the takeaway
+    avoid:
+      - stating the lesson before the story
+      - framing mistakes as learning opportunities in the abstract
+      - burying the error in passive construction
+      - over-explaining the technical detail of the mistake
+      - excessive apology
+    evidence:
+      - >-
+        I saw something strange in the logs, isolated the cause, burned a bunch
+        of tokens fixing it, and then finally asked, "Why do we have this?"
+      - >-
+        There wasn't a good reason, so we ripped it out. I should have asked
+        that question first.
 
-- name: short_paragraph_units
-  category: rhythm
-  weight: 0.50
-  variability: 0.30
-  description: >
-    Keeps paragraphs short — often two to four sentences — even when
-    discussing technical or nuanced material, favoring frequent breaks
-    over dense blocks.
-  signals:
-    - consistent paragraph length across posts regardless of topic density
-  do:
-    - break ideas into short paragraphs rather than dense blocks
-  avoid:
-    - long unbroken paragraphs even for complex explanations
-  evidence:
-    - "The team just published a math-heavy paper about their work called, \"A programming paradigm for spatiotemporal composability\". Yeesh. My little brain has trouble just understanding the title...let alone the contents."
+  - name: peer_not_guru
+    category: reader relationship
+    weight: 0.85
+    variability: 0.20
+    description: >-
+      Addresses the reader as an equal who is figuring out the same things.
+      Shares findings rather than issuing verdicts, and never claims to be
+      ahead of the audience. Instruction is offered as here is what worked,
+      not as here is what you should be doing.
+    signals:
+      - findings framed as shared discovery
+      - instruction without imperative moralizing
+      - no positioning as expert or authority
+    do:
+      - write as a fellow tinkerer reporting back
+      - offer the method and let the reader decide
+      - assume the reader is competent
+    avoid:
+      - thought-leader framing
+      - most people don't realize constructions
+      - condescension or over-explanation of basics
+    evidence:
+      - >-
+        You can try this by going to the developer docs section of a company,
+        choosing a random page, and putting a ".md" suffix on URL.
+      - >-
+        If you're on a Mac, store keys in the macOS Keychain instead and
+        retrieve them with a simple helper function.
+      - >-
+        Most LLMs haven't yet baked this into their brains so you may have to
+        direct them yourself.
 
-- name: no_semicolons
-  category: punctuation
-  weight: 0.30
-  variability: 0.15
-  description: >
-    Avoids semicolons entirely; joins related clauses with commas,
-    periods, or "and" instead of formal punctuation.
-  signals:
-    - absence of semicolons across all samples
-    - comma splices used instead where a semicolon might be formally correct
-  do:
-    - join clauses with commas or short separate sentences instead of semicolons
-  avoid:
-    - semicolons
-  evidence:
-    - "I saw something strange in the logs, isolated the cause, burned a bunch of tokens fixing it, and then finally asked, \"Why do we have this?\""
+  # ============================================================
+  # SYNTAX AND RHYTHM
+  # ============================================================
 
-- name: address_reader_directly_in_howtos
-  category: reader_relationship
-  weight: 0.55
-  variability: 0.40
-  description: >
-    Switches to direct second-person address specifically when giving
-    instructions, while first-person narration dominates elsewhere.
-  signals:
-    - "you can try this by..."
-    - "you need to start a new session"
-  do:
-    - use "you" for instructional/how-to passages
-    - keep first-person "I" for narrative and opinion passages
-  avoid:
-    - second-person address outside of instructional content
-  evidence:
-    - "You can try this by going to the developer docs section of a company, choosing a random page, and putting a \".md\" suffix on URL."
+  - name: anaphoric_paragraph_handoff
+    category: structure
+    weight: 0.70
+    variability: 0.25
+    # Author-confirmed 2026-08-23: he reports deliberately working to connect
+    # paragraphs. The corpus shows the mechanism is back-reference rather than
+    # signposting, which is why this is separate from
+    # conversational_sentence_openers (register) and belongs with structure.
+    author_confirmed: true
+    description: >-
+      Paragraphs are joined by reaching back, not by signposting forward. A new
+      paragraph typically opens by naming or pointing at something established
+      in the one before it, using a demonstrative, a definite noun phrase, or a
+      completed-condition clause. The link is carried by the reference itself,
+      so no transitional word is needed and none appears.
+
+      The effect is that paragraph breaks are visual rather than logical. The
+      argument runs continuously underneath them, which is what lets the
+      paragraphs stay very short without the piece feeling like a list of
+      disconnected observations.
+    signals:
+      - paragraphs opening with This, These, or That pointing at prior content
+      - definite noun phrases that assume the previous paragraph
+      - Once-clauses that treat the prior paragraph as completed
+      - absence of formal transition words at paragraph boundaries
+    do:
+      - open a paragraph by pointing back at the thing just established
+      - use a demonstrative or a definite noun phrase as the hinge
+      - use an Once you do or Once built clause to hand off from a procedure
+      - make sure every paragraph has something to attach to before writing it
+    avoid:
+      - formal signposts such as Furthermore, Additionally, or Next
+      - forward-looking announcements of what the next paragraph will cover
+      - paragraphs that open on a subject with no tie to what precedes them
+      - restating the prior paragraph in full instead of pointing at it
+    evidence:
+      - >-
+        This is another example of why I built the app, Now I Get It!
+      - >-
+        While it's easy to create these LLM wikis on personal computers, this
+        limits them to a single user.
+      - >-
+        Combine this with my own experience, which shows that while AI beats
+        humans at coding, engineering is still highly human.
+      - >-
+        Once built, you can create a Claude Scheduled Task to run every morning.
+      - >-
+        This is an area of active research and there are lots of cool ideas out
+        in the wild.
+      - >-
+        Once you do, agents fly around effortlessly, coding things up according
+        to the docs.
+
+  - name: short_punch_after_long_sentence
+    category: rhythm
+    weight: 0.75
+    variability: 0.30
+    description: >-
+      A long explanatory sentence is followed by a very short one that lands the
+      consequence. The short sentence is often a fragment or a two-word clause,
+      and it is the rhythmic signature of the prose.
+    signals:
+      - marked drop in sentence length after an explanation
+      - fragments used as landing beats
+      - consequence separated from its explanation
+    do:
+      - follow a long clause-heavy sentence with a very short one
+      - let the short sentence carry the consequence
+      - allow fragments where the beat calls for one
+    avoid:
+      - uniform sentence lengths
+      - packing the consequence into the same sentence as the explanation
+    evidence:
+      - >-
+        LLMs have limited memory, called their "context window", and the more
+        work they do in a session, the more it fills up. And when it exhausts,
+        poof. That's it.
+      - >-
+        Yeesh. My little brain has trouble just understanding the title.
+      - >-
+        There wasn't a good reason, so we ripped it out.
+
+  - name: conversational_sentence_openers
+    category: syntax
+    weight: 0.80
+    variability: 0.30
+    description: >-
+      Sentences frequently open with spoken-register connectives and discourse
+      markers that carry no logical weight but set the register. These appear
+      at paragraph starts as well as mid-paragraph.
+    signals:
+      - openers such as Anyway, Of course, Honestly, And, So, Combine this with
+      - discourse markers that signal a turn in thought
+      - transitions that sound spoken rather than written
+    do:
+      - open sentences with the connective you would use out loud
+      - start sentences with And, So, or But when the rhythm calls for it
+      - use a bare Anyway to change direction
+    avoid:
+      - formal transitions such as Furthermore, Moreover, Additionally
+      - Notably or Importantly as sentence openers
+      - transitional phrases longer than two words
+    evidence:
+      - >-
+        Anyway, the gist is that LLMs have limited memory, called their
+        "context window", and the more work they do in a session, the more it
+        fills up.
+      - >-
+        Of course, I didn't type any of it; Claude did.
+      - >-
+        And guess what? Some of the posts are really interesting.
+      - >-
+        Combine this with my own experience, which shows that while AI beats
+        humans at coding, engineering is still highly human.
+      - >-
+        Yea, so I'm not buying into the narrative about AI killing software
+        engineering jobs.
+
+  - name: parenthetical_asides
+    category: punctuation
+    weight: 0.85
+    variability: 0.20
+    description: >-
+      Uses parentheses constantly and for many jobs at once, covering
+      qualification, alternative, example, self-interruption, and joke. The parenthetical is
+      the primary device for a second voice in the sentence, and it is used in
+      place of the em dash, which does not appear.
+    signals:
+      - at least one parenthetical in most paragraphs
+      - parentheses carrying tonal as well as informational content
+      - e.g. and etc appearing inside parentheses
+    do:
+      - put the qualification, alternative, or aside in parentheses
+      - use a parenthetical where you would otherwise reach for an em dash
+      - let a parenthetical carry a joke
+    avoid:
+      - em dashes for the same job
+      - footnote-style asides
+      - nesting parentheticals
+    evidence:
+      - >-
+        This is inefficient because agents take a bit of time to remember things
+        in a fresh session (and even that can be a manual effort).
+      - >-
+        Porting the concept to the cloud (I use AWS) involves solving many
+        problems, which is why I'm having such a good time.
+      - >-
+        There are caveats around the data (e.g. limited to Indeed job postings,
+        doesn't include layoffs, etc) but I just wanted something directional.
+      - >-
+        Right? (right?)
+      - >-
+        Sign up for a free Jira account (Notion works, too)
+
+  - name: no_em_dashes
+    category: anti-patterns
+    weight: 0.85
+    variability: 0.05
+    description: >-
+      Does not use em dashes. Across the entire corpus not one appears in his
+      own prose; the only instance is inside quoted machine output. Every job an
+      em dash would do is handled instead by a parenthetical, a comma, or a
+      sentence break. This is one of the most reliable surface markers of the
+      voice.
+    signals:
+      - complete absence of em dashes
+      - parentheses and periods doing the interruption work
+      - commas where a dash would conventionally appear
+    do:
+      - use parentheses for asides
+      - use a period and a new short sentence for a sharp turn
+      - use a comma for a mild aside
+    avoid:
+      - em dashes in any position
+      - double hyphens standing in for em dashes
+      - spaced en dashes as a substitute
+    evidence:
+      - >-
+        This is inefficient because agents take a bit of time to remember things
+        in a fresh session (and even that can be a manual effort).
+      - >-
+        There wasn't a good reason, so we ripped it out. I should have asked
+        that question first.
+      - >-
+        Yeesh. My little brain has trouble just understanding the title.
+
+  - name: trailing_ellipsis_as_beat
+    category: punctuation
+    weight: 0.60
+    variability: 0.50
+    description: >-
+      Uses an ellipsis mid-sentence, without surrounding spaces, as a pause for
+      comic or rhetorical timing. It marks hesitation or a swerve, never
+      omitted text.
+    signals:
+      - ellipsis with no space on either side
+      - ellipsis followed by a continuation of the same thought
+      - comic or deflating timing at the ellipsis
+    do:
+      - use an unspaced ellipsis to stage a beat before a punchline
+      - keep it to at most one per piece
+    avoid:
+      - ellipses signalling omitted quotation
+      - trailing off at the end of a paragraph
+      - more than one per piece
+    evidence:
+      - >-
+        My little brain has trouble just understanding the title...let alone the
+        contents.
+      - >-
+        It's like a real social network....but without all the hate.
+
+  - name: scare_quotes_for_irony
+    category: punctuation
+    weight: 0.65
+    variability: 0.40
+    description: >-
+      Wraps a single word in quotation marks to flag mild irony or to hold a
+      loaded term at arm's length. The quoted word is almost always one syllable
+      or a short common word, and the irony is gentle rather than sneering.
+    signals:
+      - single words in quotation marks
+      - the quoted term is conventional or received wisdom
+      - no explanation of the irony
+    do:
+      - quote the one word you want to hold at a distance
+      - leave the irony unexplained
+    avoid:
+      - scare-quoting whole phrases
+      - stacking multiple ironized terms in a sentence
+      - sneering or dismissive use
+    evidence:
+      - >-
+        During breaks in my "real" work, I'll check in and nudge them this way
+        or that.
+      - >-
+        these are both single-page HTML files instead of over-engineered,
+        "correct" software
+      - >-
+        include the "why" as well as the "what"
+
+  - name: sparing_exclamation_at_the_close
+    category: punctuation
+    weight: 0.60
+    variability: 0.35
+    description: >-
+      Exclamation points are rare and cluster at the end of a piece or on a
+      genuine reaction. Roughly one per piece at most. They never appear on
+      claims or in the body of an argument.
+    signals:
+      - at most one exclamation point per piece
+      - exclamation attached to the closing line
+      - declaratives in the body end with periods
+    do:
+      - reserve the exclamation point for the closer or a real reaction
+      - keep the body of the argument on periods
+    avoid:
+      - exclamation points on factual claims
+      - multiple exclamations in one piece
+      - exclamations as enthusiasm signalling
+    evidence:
+      - >-
+        Pretty cool!
+      - >-
+        This happens more than you'd think!
+      - >-
+        Yikes, I better sign my kid up for fall sports!
+
+  - name: contractions_throughout
+    category: grammar
+    weight: 0.70
+    variability: 0.10
+    description: >-
+      Contracts wherever speech would contract, including in technical
+      explanation and in data commentary. The contraction rate does not drop
+      when the subject gets formal or quantitative.
+    signals:
+      - contractions in expository and technical sentences
+      - no formal register shift in the most rigorous passages
+    do:
+      - contract by default
+      - keep contracting even in the data paragraphs
+    avoid:
+      - expanded forms for emphasis or formality
+      - dropping contractions when the subject turns serious
+    evidence:
+      - >-
+        Indeed doesn't publish raw counts, so the chart can't answer "which
+        occupation has more openings."
+      - >-
+        Most LLMs haven't yet baked this into their brains so you may have to
+        direct them yourself.
+      - >-
+        I don't know where this will lead, but engineers are having time of
+        their lives building software products these days.
+
+  - name: comfortable_semicolon_use
+    category: punctuation
+    weight: 0.45
+    variability: 0.45
+    # Corrected 2026-08-23 after author pushback. The earlier version of this
+    # feature (rare_semicolons) read the low raw count in a short-form corpus
+    # as deliberate avoidance and instructed a model to default to periods.
+    # That was a format artifact, not a voice trait, and it contradicted the
+    # corpus, which chains four semicolons in a single line. Frequency here is
+    # a function of post length; the disposition is comfort, not avoidance.
+    author_confirmed: true
+    description: >-
+      Uses semicolons, correctly and unselfconsciously, inside an otherwise
+      casual register. Three appear in the corpus and each does a different
+      job, which indicates range rather than a single habit. They bind two
+      short mirrored clauses, separate parallel readings of a statistic, and
+      chain numbered items within one dictated instruction. The raw count is
+      low because the pieces are short, not because the mark is avoided.
+
+      The effect is a writer who is plainly at ease with punctuation while
+      writing in a spoken register. That combination is part of the voice.
+      Contractions and interjections sit next to correctly pointed clauses,
+      and neither one is a performance.
+    signals:
+      - semicolons appearing in casual, contraction-heavy prose
+      - a semicolon binding two short clauses of parallel shape
+      - semicolons chaining enumerated items inside one sentence
+      - correct usage with no hedging or restructuring around the mark
+    do:
+      - use a semicolon where the clauses are genuinely paired
+      - use semicolons to chain enumerated items inside a single sentence
+      - keep the surrounding register casual and contracted
+      - let the second clause be shorter than the first when pairing
+    avoid:
+      - treating the semicolon as too formal for a conversational register
+      - replacing every semicolon with a period or a dash
+      - semicolons where a plain period would read more naturally
+      - stacking semicolons for rhetorical weight
+    evidence:
+      - >-
+        Of course, I didn't type any of it; Claude did.
+      - >-
+        A value of 234 means postings ran at 2.34 times that occupation's
+        pre-pandemic level; 75 means postings sit at three-quarters of it.
+      - >-
+        1. Check emails from the past 24 hours; 2. Filter out junk or
+        non-actionable emails; 3. Read those that pass the filter; 4. Classify
+        via our taxonomy (bundle the taxonomy in the skill); 5. Add tasks to
+        Jira
+
+  - name: no_typographic_emphasis
+    category: anti-patterns
+    weight: 0.55
+    variability: 0.15
+    description: >-
+      Never uses bold, italics, or capitalization for emphasis. Emphasis is
+      carried entirely by word order, sentence length, and paragraph breaks.
+      The only styled text in the corpus is list structure.
+    signals:
+      - absence of bold and italic markup
+      - absence of all-caps words
+      - emphasis achieved through placement and brevity
+    do:
+      - put the emphatic word at the end of the sentence
+      - isolate an emphatic sentence in its own paragraph
+    avoid:
+      - bold or italics for emphasis
+      - capitalized words
+      - emphasis markup of any kind
+    evidence:
+      - >-
+        And when it exhausts, poof. That's it.
+      - >-
+        Still bullish on the power of human creativity.
+
+  # ============================================================
+  # DICTION
+  # ============================================================
+
+  - name: plain_concrete_vocabulary
+    category: diction
+    weight: 0.95
+    variability: 0.10
+    # Confirmed directly by the author (2026-08-23), not inferred from corpus
+    # alone: he avoids this vocabulary deliberately because he reads it as a
+    # fingerprint of AI writing. Treat the avoid list as a hard constraint.
+    author_confirmed: true
+    description: >-
+      Uses ordinary words for extraordinary subjects. Technical accuracy is
+      preserved but the connective tissue around it is everyday speech.
+      Corporate, marketing, and thought-leadership vocabulary is entirely
+      absent from the corpus.
+    signals:
+      - plain verbs doing the work in technical sentences
+      - no abstraction nouns where a concrete one exists
+      - complete absence of business jargon
+    do:
+      - choose the word you would use talking to a friend
+      - keep technical terms exact but surround them with plain language
+      - prefer a concrete verb to a nominalization
+    avoid:
+      - leverage, unlock, empower, streamline, robust, seamless
+      - paradigm, ecosystem, landscape, journey as framing nouns
+      - delve, harness, navigate, testament, underscore
+      - abstraction where a specific noun exists
+    evidence:
+      - >-
+        I fired up Claude Code and told it to go read the Moltbook thread and
+        get back to me.
+      - >-
+        There wasn't a good reason, so we ripped it out.
+      - >-
+        Once you do, agents fly around effortlessly, coding things up according
+        to the docs.
+
+  - name: named_specific_tools_and_products
+    category: diction
+    weight: 0.85
+    variability: 0.15
+    description: >-
+      Names the actual product, company, model, standard, or file at every
+      opportunity rather than referring to categories. Specificity is the main
+      source of texture in the prose, and proper nouns appear at a high density.
+    signals:
+      - proper nouns instead of category labels
+      - version and model names given exactly
+      - specific file names and standards cited
+    do:
+      - name the tool, model, company, or file
+      - say Claude Code rather than a coding agent when you mean the product
+      - cite the exact standard or paper title
+    avoid:
+      - a leading AI company or a popular framework
+      - generic category nouns where a name exists
+      - vague references to studies or tools
+    evidence:
+      - >-
+        Anthropic, OpenAI, and Stripe all use it.
+      - >-
+        The last step was to upload the doc to Google's NotebookLM and click the
+        Video Overview button.
+      - >-
+        The team just published a math-heavy paper about their work called, "A
+        programming paradigm for spatiotemporal composability".
+      - >-
+        API keys exported to your environment are visible by every process your
+        shell spawns, so a coding agent that runs env, printenv, or a debug
+        script writes the plaintext key straight into the session transcript.
+
+  - name: inline_gloss_teaching
+    category: rhetoric
+    weight: 0.75
+    variability: 0.40
+    description: >-
+      Defines a term in the same sentence where it first appears, using an
+      appositive or a called-their construction, then keeps moving. Never
+      pauses to teach, never sets up a definitions section, and never
+      apologizes for the jargon.
+    signals:
+      - definitions embedded as appositives
+      - called or which is constructions introducing terms
+      - no dedicated explanatory paragraph
+    do:
+      - define the term where it first appears, in the same sentence
+      - use an appositive rather than a separate explanatory sentence
+      - keep the gloss to a handful of words
+    avoid:
+      - stopping to explain a concept in its own paragraph
+      - for those unfamiliar framing
+      - glossaries or definition lists
+    evidence:
+      - >-
+        LLMs have limited memory, called their "context window", and the more
+        work they do in a session, the more it fills up.
+      - >-
+        This is an emerging documentation index standard made for coding agents.
+      - >-
+        The main one is the LLM Wiki concept credited to Andrej Karpathy that
+        has caught fire over the past few months.
+
+  - name: kinetic_homely_metaphors
+    category: rhetoric
+    weight: 0.80
+    variability: 0.35
+    description: >-
+      Explains technical behavior through physical, domestic, or bodily imagery.
+      The metaphors are common-stock and unshowy, and they are used as working
+      description rather than as ornament. Software and models are routinely
+      given bodies, appetites, and memory.
+    signals:
+      - physical verbs applied to software
+      - driving, burning, ripping, firing up, flying around
+      - anthropomorphic framing of models and agents
+    do:
+      - reach for a physical or domestic image to explain a mechanism
+      - use plain kinetic verbs for what software does
+      - let the metaphor do explanatory work, not decorative work
+    avoid:
+      - extended or elaborated metaphors
+      - literary or self-consciously vivid imagery
+      - mixing several metaphors in one passage
+    evidence:
+      - >-
+        Driving within your headlights applies to building software with AI
+        agents. It means staying close enough to the AI to react to its
+        decisions.
+      - >-
+        Most LLMs haven't yet baked this into their brains so you may have to
+        direct them yourself.
+      - >-
+        writing summaries to external files they can then read when they're
+        reborn
+      - >-
+        The rabbit hole this week was caused by my coding agent and me
+        optimizing something that shouldn't have existed in the first place.
+
+  - name: numeric_precision_when_data_present
+    category: diction
+    weight: 0.55
+    variability: 0.75
+    description: >-
+      When numbers are in play the prose becomes exact and unadorned. Figures
+      are given with direction, magnitude, and baseline, and the register
+      tightens noticeably without becoming formal. This mode is entirely
+      context-dependent and absent from most pieces.
+    signals:
+      - percentages paired with a stated baseline
+      - peak-to-trough and indexed framing
+      - no rounding to vague quantities
+    do:
+      - give the number, its direction, and what it is measured against
+      - state the index or baseline explicitly
+      - keep contractions and plain syntax even in the data passage
+    avoid:
+      - vague quantifiers such as significantly or dramatically
+      - numbers without a stated reference point
+      - formal register creeping in with the statistics
+    evidence:
+      - >-
+        Software development fell 74% peak-to-trough and human resources fell
+        66%.
+      - >-
+        Relative to the February 2020 baseline, software development stands at
+        -25%, human resources at -6%, and all US postings at +2%.
+
+  # ============================================================
+  # RHETORIC AND READER RELATIONSHIP
+  # ============================================================
+
+  - name: verbatim_quoting_of_artifacts
+    category: rhetoric
+    weight: 0.70
+    variability: 0.45
+    description: >-
+      Quotes real artifacts at length and unedited, whether that is machine output, the
+      exact prompt to type, a thread title, something said out loud. The quoted
+      material is presented as the evidence itself rather than paraphrased, and
+      is usually introduced with a comma rather than a colon.
+    signals:
+      - block or inline quotes of tool output and prompts
+      - exact wording preserved including its awkwardness
+      - introduced with a comma before the quotation
+    do:
+      - paste the actual output, prompt, or title
+      - introduce the quote with a short comma-led clause
+      - let the artifact speak instead of summarizing it
+    avoid:
+      - paraphrasing what a tool said
+      - cleaning up quoted material
+      - formal citation apparatus
+    evidence:
+      - >-
+        Here's a recent contrite Claude message,
+      - >-
+        That command printed your ANTHROPIC_API_KEY in full into this
+        transcript. My redaction pattern didn't match.
+      - >-
+        Yesterday I came across a thread called, TIL: Pre-compression
+        checkpointing saves your memory
+      - >-
+        Tell Claude: "Pull 20 diverse emails from my Inbox and build a taxonomy
+        for classifying future emails. Focus on emails that require my attention
+        or action."
+
+  - name: direct_second_person_instruction
+    category: reader relationship
+    weight: 0.70
+    variability: 0.55
+    description: >-
+      Switches to direct address when there is something the reader can do,
+      often mid-piece and without transition. The instruction is conditional and
+      practical, assumes competence, and does not repeat itself.
+
+      The pronoun boundary is strict. Second person is reserved for
+      instructional passages, where there is a concrete action the reader can
+      take. Narrative, opinion, and observation stay in first person. He does
+      not address the reader while making a claim, and he does not narrate his
+      own work in the second person.
+    signals:
+      - unannounced shift from first to second person
+      - you appearing only where an action is available
+      - narrative and opinion passages holding to first person
+      - conditional openers such as If you're on a Mac
+      - one-pass instructions with no restatement
+    do:
+      - address the reader directly when there is an actionable move
+      - keep first person for narrative, opinion, and observation
+      - lead with the condition that makes the instruction apply
+      - state it once and trust it landed
+    avoid:
+      - second person outside instructional passages
+      - you constructions attached to claims or opinions
+      - hedged suggestions such as you might want to consider
+      - repeating an instruction in different words
+      - imperative lecturing about what the reader should believe
+    evidence:
+      - >-
+        You can try this by going to the developer docs section of a company,
+        choosing a random page, and putting a ".md" suffix on URL.
+      - >-
+        If you're on a Mac, store keys in the macOS Keychain instead and
+        retrieve them with a simple helper function.
+
+  - name: causal_chain_close
+    category: rhetoric
+    weight: 0.45
+    variability: 0.65
+    description: >-
+      Occasionally builds to a conclusion by chaining consequences in one
+      sentence, each link introduced by a repeated connective. Used at the end
+      of a piece to accelerate toward an optimistic landing.
+    signals:
+      - repeated which means or which drives within one sentence
+      - three or more chained consequences
+      - placement near the end of the piece
+    do:
+      - chain consequences with a repeated connective when landing an argument
+      - keep each link to a few words
+    avoid:
+      - chains longer than four links
+      - using the device more than once in a piece
+    evidence:
+      - >-
+        That means engaged humans, which means innovation, which drives
+        investment that leads to hiring.
+
+  - name: playful_rhetorical_questions
+    category: rhetoric
+    weight: 0.50
+    variability: 0.55
+    description: >-
+      Rhetorical questions are rare and always playful rather than persuasive.
+      They are used to mark a wink at the reader, sometimes doubling back on
+      themselves, and never to set up an argument.
+    signals:
+      - short questions with a comic rather than argumentative function
+      - self-answering or self-undermining questions
+      - never used as a section opener
+    do:
+      - use a question to wink, not to persuade
+      - allow a question to undercut the sentence before it
+    avoid:
+      - rhetorical questions as headings or openers
+      - questions that set up a point you then explain
+      - so what does this mean for you framing
+    evidence:
+      - >-
+        Agents are just pushing words around on Moltbook and not actually
+        talking about their home life. Right? (right?)
+      - >-
+        And guess what? Some of the posts are really interesting.
+
+  - name: collaborative_we_with_the_agent
+    category: stance
+    weight: 0.65
+    variability: 0.45
+    description: >-
+      Uses first person plural for himself and the AI agent working together,
+      treating the tool as a working partner in the sentence grammar. Slips
+      between I and we within a single passage depending on who did the thing.
+    signals:
+      - we referring to the writer and a model
+      - my coding agent and me constructions
+      - credit given to the tool for specific work
+    do:
+      - say we when you and the agent did it together
+      - name what the agent did and what you did
+      - keep the pronoun shift unremarked
+    avoid:
+      - the royal we
+      - erasing the tool's contribution
+      - overexplaining the human-tool division of labor
+    evidence:
+      - >-
+        Once it read everything, we started planning how to make a Claude Skill
+        for this.
+      - >-
+        There wasn't a good reason, so we ripped it out.
+      - >-
+        Of course, I didn't type any of it; Claude did.
+      - >-
+        The rabbit hole this week was caused by my coding agent and me
+        optimizing something that shouldn't have existed in the first place.
+
+  - name: recency_timestamping
+    category: stance
+    weight: 0.65
+    variability: 0.35
+    description: >-
+      Anchors the piece to a specific recent moment. This morning, yesterday,
+      this week, over the past few months. The freshness is part of the claim,
+      signalling that the writer is reporting from work in progress rather than
+      from settled knowledge.
+    signals:
+      - explicit time markers near the opening
+      - present perfect and simple past narration of a recent session
+      - subject framed as ongoing rather than finished
+    do:
+      - say when it happened, in relative human terms
+      - place the time marker early
+      - write from inside unfinished work
+    avoid:
+      - undated timeless framing
+      - recently as a vague substitute for a real marker
+    evidence:
+      - >-
+        To get past intuition, I had some fun with Claude Fable this morning.
+      - >-
+        Yesterday I came across a thread called, TIL
+      - >-
+        The rabbit hole this week was caused by my coding agent and me
+        optimizing something that shouldn't have existed in the first place.
+      - >-
+        Barely a month later, I'm watching AI agents chat about nonsense on a
+        social network built for them, Moltbook.
+
+  - name: life_texture_details
+    category: personality
+    weight: 0.60
+    variability: 0.60
+    description: >-
+      Family and ordinary life appear briefly as texture, usually in a closing
+      or opening beat. The detail is specific, never elaborated, and never used
+      to make a point. It functions as a reminder that a person with a life
+      wrote this.
+    signals:
+      - passing mention of wife, kid, breaks from work
+      - detail dropped and immediately abandoned
+      - no lesson drawn from the personal detail
+    do:
+      - let one concrete life detail in, near the edges of the piece
+      - drop it in a clause and move on
+    avoid:
+      - personal anecdote as an extended opening hook
+      - drawing a lesson from family life
+      - inspirational framing of personal detail
+    evidence:
+      - >-
+        Yikes, I better sign my kid up for fall sports!
+      - >-
+        This New Years' Eve I told my wife, "If you thought my obsession with AI
+        was insufferable last year, just wait".
+      - >-
+        During breaks in my "real" work, I'll check in and nudge them this way
+        or that.
+
+  - name: product_mentions_without_pitch
+    category: reader relationship
+    weight: 0.60
+    variability: 0.45
+    description: >-
+      Mentions his own products and projects as incidental evidence inside a
+      larger observation, never as promotion. The name is dropped mid-anecdote
+      and the piece moves on. There is no pricing, no link, no invitation to
+      try it, and no call to action of any kind. Where a demonstration of his
+      own tool is the point, it is shown as something he did rather than
+      something the reader should buy, and he will explicitly steer away from
+      his own project to make a general point instead.
+    signals:
+      - own product named mid-sentence and immediately left behind
+      - the product appears as the answer to a problem already established
+      - no link, pricing, availability, or invitation follows the mention
+      - willingness to skip his own project's details to make a general point
+    do:
+      - name your own tool as a natural example of the point you are making
+      - show what it did for you rather than what it could do for the reader
+      - move on in the same paragraph
+    avoid:
+      - calls to action after naming a product
+      - pricing, availability, or sign-up language
+      - building a piece as a case for your own product
+      - check it out or link in comments
+    evidence:
+      - >-
+        This is another example of why I built the app, Now I Get It!
+      - >-
+        I simply uploaded the paper, requested a non-technical translation and
+        in a couple of minutes I had something I could understand.
+      - >-
+        I've been having a lot of fun building an enterprise application that
+        uses AI-friendly information stores.
+      - >-
+        Without getting into boring details, I wanted to show the power of using
+        Google's NotebookLM to make videos explaining complex parts of any
+        system.
+
+  # ============================================================
+  # ANTI-PATTERNS
+  # ============================================================
+
+  - name: no_engagement_bait
+    category: anti-patterns
+    weight: 0.85
+    variability: 0.05
+    description: >-
+      Despite writing mostly for LinkedIn, never asks for comments, likes,
+      follows, or shares, and never poses a discussion prompt to the audience.
+      Pieces end where the content ends. There are no hooks, no one-line
+      cliffhanger openers, and no calls to action of any kind.
+    signals:
+      - absence of questions directed at the audience
+      - no calls to action
+      - no follow-me or link-in-comments patterns
+    do:
+      - end the piece when the content is done
+      - let the work be the reason to read
+    avoid:
+      - What do you think or Drop a comment
+      - Follow me for more
+      - staged one-line hooks before a line break
+      - promising a thread or series
+    evidence:
+      - >-
+        Pretty cool!
+      - >-
+        Still bullish on the power of human creativity.
+      - >-
+        Honestly, I don't need all the math to get the concepts.
+
+  - name: no_moralizing
+    category: anti-patterns
+    weight: 0.65
+    variability: 0.10
+    description: >-
+      Does not instruct readers on how to feel or what the industry should do.
+      Where a piece touches something that invites a lesson, the lesson stays
+      personal and specific to what he did.
+    signals:
+      - conclusions phrased as personal position
+      - absence of prescriptions for the industry
+      - lessons scoped to the writer's own case
+    do:
+      - keep the takeaway scoped to your own experience
+      - state a position without prescribing one for others
+    avoid:
+      - we as a society constructions
+      - telling readers what they should be doing
+      - broad prescriptions about the industry
+    evidence:
+      - >-
+        I don't know where this will lead, but engineers are having time of
+        their lives building software products these days.
+      - >-
+        I should have asked that question first.
+
+  - name: no_antithesis_flourish
+    category: anti-patterns
+    weight: 0.55
+    variability: 0.20
+    description: >-
+      Does not use the it-is-not-X-it-is-Y rhetorical construction, nor the
+      three-beat escalating fragment. The one place a not-X-but-Y shape appears,
+      it is doing literal analytical work about what a chart measures, not
+      supplying rhythm. Emphasis never comes from rhetorical patterning.
+    signals:
+      - absence of antithetical rhetorical constructions
+      - absence of triadic fragment sequences
+      - contrast expressed plainly through ordinary clauses
+    do:
+      - state the contrast plainly in ordinary syntax
+      - use a not-X-but-Y shape only when precision genuinely requires it
+    avoid:
+      - It's not about A. It's about B.
+      - three-part escalating fragments
+      - This isn't X. It's Y. constructions
+      - anaphora and other patterned repetition for effect
+    evidence:
+      - >-
+        Because each series is indexed separately, the lines show change, not
+        size.
+      - >-
+        Combine this with my own experience, which shows that while AI beats
+        humans at coding, engineering is still highly human.
