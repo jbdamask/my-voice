@@ -3,18 +3,34 @@
 # Canonical representation of John Damask's writing voice.
 #
 # Built: 2026-08-23
+# Updated: 2026-08-24
 #
 # corpus:
 #   - source: ~/Downloads/john-damask-writing-examples.md
+#     added: 2026-08-23
 #     samples: 9 (7 LinkedIn posts, 2 Substack excerpts)
 #     words: ~1778
 #     span: technology/AI commentary and tutorials; public professional audience
+#   - source: ~/Downloads/2026-linkedin-posts.md
+#     added: 2026-08-24
+#     samples: 20 LinkedIn posts, 12 of them new (posts 2, 3, 4, 6, 7, 9, 10 and
+#       12 restate pieces already present in the first source, in one case with
+#       small wording differences)
+#     words: ~4673
+#     span: AI/agentic engineering practice, tooling, cost analysis, one
+#       personal-hobby post; public professional audience
+#     effect: roughly tripled the corpus and, importantly, added longer
+#       multi-section posts (15, 19, 20), which is where several endings- and
+#       structure-related estimates turned out to be too tight
 #
-# Coverage caveat: the corpus is single-genre. Weights for register, formality,
-# and structure are well supported; variability estimates for private/informal
-# formats (email, Slack, chat) and for non-technical subject matter are
-# extrapolated and should be revised when such samples arrive. Features whose
-# variability is provisional are marked `provisional: true`.
+# Coverage caveat: the corpus is still almost entirely public short-form
+# technology writing, now with a long-form tail. Weights for register,
+# formality, and structure are well supported; variability estimates for
+# private/informal formats (email, Slack, chat) and for non-technical subject
+# matter are extrapolated and should be revised when such samples arrive.
+# Features whose variability is provisional are marked `provisional: true`;
+# as of 2026-08-24 none are, the last one (bare_label_section_markers) having
+# been confirmed by the long posts in the second source.
 #
 # Spelling and grammar slips present in the corpus (e.g. "as good as as",
 # "If an llms.txt exist") are treated as errors, not voice features, and are
@@ -39,6 +55,25 @@
 #     restraint promoted from a qualifier to a required component. Author also
 #     reported deliberately connecting paragraphs, which the corpus supports;
 #     added anaphoric_paragraph_handoff.
+#   - 2026-08-24: merged ~/Downloads/2026-linkedin-posts.md. Existing features
+#     were kept and adjusted rather than rebuilt. Six features added
+#     (spaced_hyphen_as_dash, anthropomorphized_agents,
+#     cross_domain_analogy_pairs, names_people_only_to_credit,
+#     coined_taxonomies_with_self_placement, links_deferred_to_comments).
+#     Four claims in the old profile were contradicted by the larger sample and
+#     corrected: (1) "link in comments" was listed as something he never does,
+#     but it appears six times and is his standard way of handling links;
+#     (2) no_typographic_emphasis banned all-caps, but rare single-word caps
+#     ("a LOT of docs", "SUCH a double-edged-sword") are real;
+#     (3) casual_interjections banned abbreviations, but IMO and PSA appear;
+#     (4) no_antithesis_flourish banned all not-X-but-Y shapes, but the
+#     compressed one-clause form occurs ("that's a reaction, not a strategy").
+#     human_off_ramp_ending and no_summary_recap were the biggest weight
+#     changes: on the larger sample only about half of posts end on a personal
+#     off-ramp, and long posts do land a short generalizing close.
+#     no_em_dashes was re-verified and holds absolutely: zero em dashes in his
+#     own prose across both sources, the only one being inside quoted machine
+#     output. The job that mark would do is done by a spaced hyphen.
 
 features:
 
@@ -55,10 +90,18 @@ features:
       sentence. There is no scene-setting, no framing of why the topic matters,
       and no announcement of what the piece will cover. The reader is dropped
       directly into the subject.
+
+      A bare figure or fragment is a legitimate opener, and so is a plain
+      count-and-topic line ("Two tips when...", "PSA:"). Those look like
+      roadmaps but are not, because the count is the content and the piece
+      starts delivering on the next line. What never appears is an opener that
+      exists only to set up the real opener.
     signals:
       - first sentence carries real information
       - no introductory or transitional opener
       - no statement of intent or roadmap
+      - a number or fragment standing alone as the first sentence
+      - count-and-topic openers that begin delivering immediately
     do:
       - lead with the specific thing you noticed, built, or disagree with
       - name the product, paper, or event in the opening clause
@@ -80,20 +123,34 @@ features:
       - >-
         This New Years' Eve I told my wife, "If you thought my obsession with AI
         was insufferable last year, just wait".
+      - >-
+        $86. That was the cost of me using Claude Cowork to manage a set of
+        files yesterday.
+      - >-
+        Frontier model companies pump out a LOT of docs.
+      - >-
+        Two tips when working on large software systems with AI agents:
+      - >-
+        Software engineers have spent much of 2026 figuring out how best to
+        scale up productivity through concurrent AI coding sessions.
 
   - name: short_paragraph_blocks
     category: structure
     weight: 0.85
-    variability: 0.15
+    variability: 0.25
     description: >-
       Paragraphs run one to three sentences. Single-sentence paragraphs are
-      common and are used as structural beats, not just for emphasis. Paragraphs
-      of four or more sentences are rare and appear only when walking through
-      data.
+      common and are used as structural beats, not just for emphasis.
+
+      The exception is the numbered item in a long multi-section post, which
+      can run five or six sentences and carry a complete small argument. Free
+      prose paragraphs stay short even in those posts; it is only the numbered
+      blocks that get dense.
     signals:
       - frequent one-sentence paragraphs
       - white space between nearly every idea
-      - no paragraph exceeding roughly four sentences
+      - unnumbered paragraphs rarely exceeding four sentences
+      - numbered items in long posts running longer than the prose around them
     do:
       - break at every change of idea
       - let a single sentence stand alone as its own paragraph
@@ -114,26 +171,39 @@ features:
 
   - name: human_off_ramp_ending
     category: structure
-    weight: 0.90
-    variability: 0.25
+    weight: 0.85
+    variability: 0.45
+    # Weight lowered and variability nearly doubled on 2026-08-24. The original
+    # estimate came from a nine-sample corpus in which almost every piece ended
+    # this way. Across 20 posts it is roughly half. The move is still a
+    # signature when it appears, but treating it as near-obligatory produced
+    # forced whimsy on posts that should end flat.
     description: >-
-      Pieces end on a short, personal, often lighter line rather than a
+      Pieces very often end on a short, personal, lighter line rather than a
       conclusion. The closer is typically one sentence and does one of four
       things: a joke, an admission, a forward-looking sentiment, or a plain
       expression of delight. It never recaps the argument.
+
+      The alternative ending, roughly as common in longer and more
+      instructional posts, is a flat practical or forward-looking line with no
+      tonal shift at all: the last step of a procedure, an invitation to try
+      the thing, or a one-sentence generalization. Both endings are short. What
+      is constant is that the piece stops the moment it is done, not that it
+      stops on a joke.
     signals:
       - final line is markedly shorter than the paragraph before it
-      - closer shifts from technical register to personal register
+      - closer often shifts from technical register to personal register
       - no restatement of the main point
+      - instructional pieces closing on the action rather than on a beat
     do:
-      - end on one short sentence that steps back from the subject
-      - close with delight, self-effacement, or a forward look
-      - let the closer be tonally lighter than what precedes it
+      - end on one short sentence
+      - close with delight, self-effacement, or a forward look when the piece has room for it
+      - let an instructional or analytical piece end flat rather than manufacturing a beat
     avoid:
       - summary paragraphs
       - In conclusion or To wrap up
       - restating the thesis
-      - ending on the last technical detail with no human beat
+      - forcing a whimsical closer onto a piece that does not want one
     evidence:
       - >-
         Yikes, I better sign my kid up for fall sports!
@@ -145,26 +215,49 @@ features:
         I should have asked that question first.
       - >-
         Honestly, I don't need all the math to get the concepts.
+      - >-
+        Early days but I can see potential.
+      - >-
+        This feature is fun.
+      - >-
+        If you've ever asked your agent, "what was that you needed from me?" or
+        scrolled endlessly through terminal sessions looking for clues, try this
+        out.
+      - >-
+        Well, I didn't actually write it. I indexed the codebase then had Claude
+        pull out interesting features and write about them from the Mayor's
+        quirky perspective.
 
   - name: no_summary_recap
     category: anti-patterns
-    weight: 0.70
-    variability: 0.15
+    weight: 0.60
+    variability: 0.35
+    # Softened 2026-08-24. The long posts in the second source do close with a
+    # generalization, which the original absolute framing would have blocked.
+    # The distinction that survives is recap versus landing.
     description: >-
-      Never closes by recapitulating what was just said. Where a summary would
-      conventionally go, there is either the personal off-ramp or nothing at
-      all. The reader is trusted to have followed.
+      Does not close by recapitulating what was just said. Where a summary
+      would conventionally go, there is either the personal off-ramp or nothing
+      at all. The reader is trusted to have followed.
+
+      Long multi-section posts are the one place a generalizing close appears,
+      and it is a landing rather than a recap: one or two sentences that say
+      what the whole thing adds up to, often circling back to the specific
+      example the piece opened on. It never re-lists the points. A reader who
+      skipped the close would lose the framing, not the content.
     signals:
       - absence of concluding recap
       - absence of key takeaways sections
       - final paragraph introduces a new note rather than consolidating
+      - long pieces landing on a single generalization tied to the opening image
     do:
       - stop when the content is delivered
       - trust the reader to retain the argument
+      - in a long piece, land on one sentence of what it adds up to, not a list
     avoid:
       - TL;DR or Key takeaways blocks
       - So to summarize
-      - repeating the opening claim at the end for symmetry
+      - re-enumerating the points made above
     evidence:
       - >-
         I don't know where this will lead, but engineers are having time of
@@ -172,23 +265,35 @@ features:
       - >-
         The last step was to upload the doc to Google's NotebookLM and click the
         Video Overview button.
+      - >-
+        So, if 2025 was the year of "AI literacy" then 2026 is the year where we
+        stop throwing everything at LLMs. There are already clear cases where
+        using AI for basic tasks is slow and expensive. Using Claude Cowork for
+        routine file operations is one of them.
+      - >-
+        Regardless of which tool you use, the point is that humans can delegate
+        more to AI and still get high-quality output.
 
   - name: bare_label_section_markers
     category: structure
-    weight: 0.60
-    variability: 0.55
-    provisional: true
+    weight: 0.65
+    variability: 0.50
+    # provisional flag removed 2026-08-24: the second source contains several
+    # long posts and the behavior held in all of them.
     description: >-
       In longer pieces, sections are marked with a bare word or phrase followed
       by a colon on its own line, not with markdown headings or bold. The labels
-      are functional and unadorned.
+      are functional and unadorned. Where a piece has numbered sections, the
+      number plus a bare noun phrase does the same job, still with no styling.
     signals:
       - lines such as "Steps:" or "Observations:" standing alone
       - no heading syntax within the body of a post
       - labels are plain nouns, not questions or teasers
+      - numbered section titles that are bare noun phrases
     do:
       - use a plain label plus colon when a section needs naming
       - keep labels literal and short
+      - number sections when there are several, and leave the titles unstyled
     avoid:
       - markdown headings inside short-form posts
       - clever or teasing section titles
@@ -200,6 +305,12 @@ features:
         How to read the chart:
       - >-
         Observations:
+      - >-
+        Gameplay:
+      - >-
+        PSA: Protect API keys from exposure by coding agents
+      - >-
+        1. Model Prompting Guidelines
 
   - name: numbered_procedural_steps
     category: structure
@@ -213,10 +324,12 @@ features:
       - numbered lists with imperative verbs
       - verbatim prompts embedded inside a step
       - parenthetical alternatives instead of sub-branches
+      - angle-bracket placeholders standing in for the reader's own values
     do:
       - number the steps and start each with a verb
       - include the exact command or prompt to use
       - put substitutions in parentheses on the same line
+      - mark the reader's own values with angle brackets inside a quoted prompt
     avoid:
       - prose walkthroughs of a procedure
       - explaining each step's rationale inside the step
@@ -230,6 +343,11 @@ features:
         attention or action."
       - >-
         6. Tweak as needed
+      - >-
+        5. Tell Claude: "Now grab 3 random emails, process them with this
+        taxonomy, and write them to my JIRA board: <insert URL>"
+      - >-
+        2. git clone <repo>; 3. /codebase-memory index
 
   - name: parallel_gerund_bullet_lists
     category: structure
@@ -239,6 +357,11 @@ features:
       When enumerating capabilities or behaviors rather than steps, bullets open
       with a gerund and hold that grammatical shape across the whole list.
       Individual bullets may carry a concrete example appended after a period.
+
+      This applies to tight capability lists. In long posts the enumerated
+      items are numbered multi-sentence blocks instead, each opening with a
+      short noun-phrase label and then arguing in prose, so the gerund
+      parallelism does not apply there.
     signals:
       - every bullet opens with an -ing verb
       - strict grammatical parallelism across items
@@ -267,7 +390,7 @@ features:
   - name: controlled_enthusiasm
     category: tone
     weight: 0.90
-    variability: 0.35
+    variability: 0.30
     # Author-confirmed 2026-08-23, in his own term: "controlled enthusiasm."
     # The control is not a dilution of the enthusiasm, it is a component of it.
     # Both halves must be present. Enthusiasm without the restraint reads as
@@ -285,11 +408,17 @@ features:
       The tell is the gap between how interesting the subject clearly is to him
       and how restrained the words describing it are. A genuinely exciting
       result gets "Pretty cool!" and nothing more.
+
+      Where an intensifier does appear it is spoken-register rather than
+      promotional: really freaking smart, so cool, pretty sweet. Those are the
+      words of someone talking, not of someone selling, and they stay attached
+      to a specific thing he watched happen.
     signals:
       - explicit but plainly worded statements of enjoyment
       - hard problems described as the appeal rather than the obstacle
       - enthusiasm markers that are shorter than the material would license
       - no superlatives anywhere near the thing he is excited about
+      - intensifiers drawn from speech rather than from marketing
     do:
       - say directly that something was fun or interesting
       - frame complexity as what makes the work enjoyable
@@ -312,11 +441,24 @@ features:
         Pretty cool!
       - >-
         To get past intuition, I had some fun with Claude Fable this morning.
+      - >-
+        This is so cool. Video search in McBrain is a beautiful feature.
+      - >-
+        The design is really freaking smart and also lets me customize to my
+        taste.
+      - >-
+        It's amazing. I love it, AI agents love it, and 24k+ other people love
+        it according to its GitHub stars.
+      - >-
+        I have a pretty sweet setup in AWS.
+      - >-
+        It was so much fun to make, and I already have some surf casters cursing
+        me because they've gotten into trouble playing it at work.
 
   - name: self_deprecating_humor
     category: humor
-    weight: 0.75
-    variability: 0.55
+    weight: 0.80
+    variability: 0.50
     description: >-
       Positions himself as the least impressive party in the room, usually by
       undercutting his own comprehension or discipline. The joke lands on
@@ -343,6 +485,18 @@ features:
         was insufferable last year, just wait".
       - >-
         Yikes, I better sign my kid up for fall sports!
+      - >-
+        You can't out-fish this guy (at least, I can't). One night earlier in
+        the summer he caught 16 striped bass to my 3. And we were standing 50 ft
+        apart!
+      - >-
+        Instead of popping blood vessels cursing their agents when they do dumb
+        things (*ahem), the say "OMG, look how far it got!"
+      - >-
+        But then your mind starts melting as you flip back and forth.
+      - >-
+        I finally found a day to dig into it and, even though it did some
+        amazing stuff, I was confused.
 
   - name: casual_interjections
     category: diction
@@ -351,16 +505,23 @@ features:
     description: >-
       Uses short spoken-register interjections as standalone reactions or
       sentence openers. They function as tonal punctuation, marking a shift from
-      exposition into the writer's own reaction.
+      exposition into the writer's own reaction. The register is mid-century
+      cartoon rather than internet: yeesh, yikes, zoiks, poof, dude.
+
+      A small number of long-established abbreviations belong to this register
+      too. IMO and PSA both appear and read as speech, not as chat shorthand.
+      Actual internet slang and emoji are absent.
     signals:
       - one-word reactions set off as their own sentence
       - spoken-register openers
       - sound-effect words used as verbs or beats
+      - IMO or PSA where a spoken hedge or announcement would go
     do:
       - drop in a one-word reaction where a spoken aside would land
       - use plain interjections rather than internet slang
+      - use a long-established abbreviation such as IMO or PSA where speech would
     avoid:
-      - internet-native slang and abbreviations
+      - internet-native slang such as lol, tbh, ngl, or fam
       - emoji as tonal markers
       - stacking interjections
     evidence:
@@ -375,23 +536,44 @@ features:
         And when it exhausts, poof. That's it.
       - >-
         Honestly, I don't need all the math to get the concepts.
+      - >-
+        There's the Mayor, Rigs, Polecats, Witnesses...zoiks.
+      - >-
+        Wait, what? I've never had a coding agent do this before.
+      - >-
+        "Dude, what did you just do? This is an important feature so I need to
+        understand."
+      - >-
+        But creating beats doom scrolling any day, IMO.
+      - >-
+        PSA: Protect API keys from exposure by coding agents
 
   - name: soft_edged_contrarianism
     category: stance
-    weight: 0.55
-    variability: 0.60
+    weight: 0.65
+    variability: 0.55
     description: >-
       Disagrees with prevailing narratives, but concedes the opposing case in
       the same breath before proceeding. The disagreement is stated as personal
       position rather than as correction of others, and no one is named as
       wrong.
+
+      Judgments do get sharp, and when they do the target is always
+      anonymized to a decision rather than attached to a company or a person.
+      He will report a specific thing an unnamed org did, quote it, and call it
+      a bad call in one clause, then immediately explain the cost rather than
+      dwell on the verdict. Sharpness is spent on the reasoning, not on the
+      target.
     signals:
       - first-person framing of disagreement
       - immediate concession clause after the disagreement
       - no named target
+      - criticized decisions attributed to an unnamed party
+      - a one-clause verdict followed by the substantive reason
     do:
       - state disagreement as your own read, not as a correction
       - concede the plausible version of the opposing view immediately
+      - anonymize the party when the judgment is unflattering
       - move to evidence rather than dwelling on the disagreement
     avoid:
       - naming and criticizing specific people or firms
@@ -402,6 +584,15 @@ features:
         Yea, so I'm not buying into the narrative about AI killing software
         engineering jobs. I mean, maybe, but the post-COVID economy and current
         global craziness seem like more likely drivers.
+      - >-
+        I heard of one telling their employees, "Opus is not allowed!" Frankly,
+        that's a reaction, not a strategy. You may save 50% off the sticker
+        price but this ignores the cost of re-work on tasks when Sonnet
+        underperforms.
+      - >-
+        Steve also found time to write a really good book called, "Vibe Coding"
+        (IMO, it's more about "agentic engineering" but you won't sell a lot of
+        books with that title).
 
   # ============================================================
   # STANCE AND ARGUMENTATION
@@ -442,6 +633,18 @@ features:
       - >-
         I fired up Claude Code and told it to go read the Moltbook thread and
         get back to me.
+      - >-
+        $86. That was the cost of me using Claude Cowork to manage a set of
+        files yesterday.
+      - >-
+        I've been pressure-testing an open source solution, called Gas Town by
+        Steve Yegge, and am a big fan.
+      - >-
+        I've been doing this a lot lately by indexing open source software using
+        the Codebase Memory MCP.
+      - >-
+        I used to put this stuff into my CLAUDE.md but found that it wasn't
+        always used.
 
   - name: problem_then_personal_demo
     category: rhetoric
@@ -475,28 +678,45 @@ features:
       - >-
         The rabbit hole this week was caused by my coding agent and me
         optimizing something that shouldn't have existed in the first place.
+      - >-
+        The problem is that as a McBrain gets big, a 2D graph viz becomes
+        useless - it just looks like a hairball. I've been playing around with
+        3D libraries and here's a video of a prototype.
+      - >-
+        But it's tough for engineers to explain complex work in simple terms to
+        their boss. That's what SEFAM is for.
 
   - name: bounded_claims_and_caveats
     category: argumentation
-    weight: 0.85
+    weight: 0.90
     variability: 0.30
     description: >-
       Preemptively marks the limits of his own evidence before anyone can
       object. Caveats are brief, specific, and stated as a matter of fact
       rather than as anxiety, and are usually followed immediately by a
       statement of what he was actually after.
+
+      Forecasts get the same treatment, labelled in the sentence that makes
+      them. He says he is speculating, or that he does not know, and then
+      speculates anyway at full length. The label is not a retreat from the
+      claim; it marks which register the reader is in, and the reasoning that
+      follows is as detailed as if he were sure.
     signals:
       - explicit limitations of data or method
       - a stated purpose that the limitation does not undermine
       - hedging language attached to conclusions rather than observations
+      - forecasts prefaced with an explicit admission that they are guesses
+      - the guess still delivered in full after the label
     do:
       - name the specific limitation and move on in the same paragraph
       - say what level of confidence you were actually going for
       - keep the caveat shorter than the claim it qualifies
+      - say plainly that you are speculating, then speculate properly
     avoid:
       - blanket disclaimers
       - apologizing for the limits of your evidence
       - overstating confidence and letting readers find the holes
+      - hedging so heavily that the claim disappears
     evidence:
       - >-
         There are caveats around the data (e.g. limited to Indeed job postings,
@@ -507,6 +727,20 @@ features:
       - >-
         Of course it's all nonsense. Agents are just pushing words around on
         Moltbook and not actually talking about their home life. Right? (right?)
+      - >-
+        I'm speculating, but it wouldn't surprise me if some
+        AI-forward-yet-frugal companies impose hiring freezes while they figure
+        out how to calculate value/impact of all these AI tools and agents.
+      - >-
+        I'm not sure how to weight the different relief vectors but imagine it
+        will be some combination of customer maturity (ie we'll all get better at
+        using AI agents efficiently), local models (if the cost of running your
+        own infrastructure is significantly cheaper than frontier model API
+        calls), and frontier labs resorting to more traditional software wrappers
+        around AI - we saw a glimpse of that last week with the release of Claude
+        Code Workflows.
+      - >-
+        Early days but I can see potential.
 
   - name: explicit_scope_of_evidence
     category: argumentation
@@ -554,12 +788,18 @@ features:
       past-tense clauses, and only then is the lesson named, in one short
       sentence at the end. The lesson never comes first, and the technical
       minutiae of the mistake are not elaborated.
+      A quieter version of the same disposition is the superseded-practice
+      report: he names something he used to do, says what went wrong with it,
+      and describes what replaced it, all in two or three sentences. There is
+      no embarrassment attached to having done the old thing.
     signals:
       - first-person account of wasted work
       - a stated should-have
       - mistake framed as the lesson rather than as an aside
       - sequential past-tense clauses compressed into one sentence
       - lesson withheld until after the narration
+      - I used to X but found Y constructions
+      - open admission of not understanding something he spent a day on
     do:
       - say what you got wrong and what it cost
       - narrate the arc chronologically before naming the lesson
@@ -580,6 +820,16 @@ features:
       - >-
         There wasn't a good reason, so we ripped it out. I should have asked
         that question first.
+      - >-
+        I used to put this stuff into my CLAUDE.md but found that it wasn't
+        always used. Having a skill and starting new sessions by saying
+        "reorient" ensures a happy agent and human.
+      - >-
+        I finally found a day to dig into it and, even though it did some
+        amazing stuff, I was confused.
+      - >-
+        I need to do some cost optimizing because research jobs get expensive but
+        other than that it's working well.
 
   - name: peer_not_guru
     category: reader relationship
@@ -612,6 +862,13 @@ features:
       - >-
         Most LLMs haven't yet baked this into their brains so you may have to
         direct them yourself.
+      - >-
+        There are two types of HH's: those who don't know how to build software
+        (no shame) and those who do.
+      - >-
+        If you've ever asked your agent, "what was that you needed from me?" or
+        scrolled endlessly through terminal sessions looking for clues, try this
+        out.
 
   # ============================================================
   # SYNTAX AND RHYTHM
@@ -669,6 +926,16 @@ features:
       - >-
         Once you do, agents fly around effortlessly, coding things up according
         to the docs.
+      - >-
+        As I've gotten deeper into building and using McBrains I wanted to get
+        them off of my computer and into the cloud.
+      - >-
+        Once the knowledge base is in place, I can ask all sorts of questions
+        that lead to findings, insights, and other questions.
+      - >-
+        The cloud design is such that a bunch of workers fan out and do research
+        in parallel, then bring everything home where an LLM goes through the
+        results and links everything.
 
   - name: short_punch_after_long_sentence
     category: rhythm
@@ -698,6 +965,13 @@ features:
         Yeesh. My little brain has trouble just understanding the title.
       - >-
         There wasn't a good reason, so we ripped it out.
+      - >-
+        At the end, it gave a recommendation. Wait, what?
+      - >-
+        $86. That was the cost of me using Claude Cowork to manage a set of
+        files yesterday.
+      - >-
+        There's the Mayor, Rigs, Polecats, Witnesses...zoiks.
 
   - name: conversational_sentence_openers
     category: syntax
@@ -708,9 +982,10 @@ features:
       markers that carry no logical weight but set the register. These appear
       at paragraph starts as well as mid-paragraph.
     signals:
-      - openers such as Anyway, Of course, Honestly, And, So, Combine this with
+      - openers such as Anyway, Of course, Honestly, Frankly, Basically, And, So
       - discourse markers that signal a turn in thought
       - transitions that sound spoken rather than written
+      - a bare Regardless or Anyway used to close a digression
     do:
       - open sentences with the connective you would use out loud
       - start sentences with And, So, or But when the rhythm calls for it
@@ -734,20 +1009,38 @@ features:
       - >-
         Yea, so I'm not buying into the narrative about AI killing software
         engineering jobs.
+      - >-
+        Basically, you have Control Freaks and High-Hopers.
+      - >-
+        Frankly, that's a reaction, not a strategy.
+      - >-
+        Anyway, Steve's mega-project this past year has been something called Gas
+        Town.
+      - >-
+        Regardless of which tool you use, the point is that humans can delegate
+        more to AI and still get high-quality output.
 
   - name: parenthetical_asides
     category: punctuation
-    weight: 0.85
-    variability: 0.20
+    weight: 0.90
+    variability: 0.15
     description: >-
       Uses parentheses constantly and for many jobs at once, covering
-      qualification, alternative, example, self-interruption, and joke. The parenthetical is
-      the primary device for a second voice in the sentence, and it is used in
-      place of the em dash, which does not appear.
+      qualification, alternative, example, self-interruption, and joke. The
+      parenthetical is the primary device for a second voice in the sentence,
+      and it is used in place of the em dash, which does not appear.
+
+      Length varies more than the profile originally allowed. Most are a few
+      words, but a parenthetical can run a full sentence when it carries an
+      unrelated aside about his own life, and it can be as short as a stage
+      direction. What holds is that the aside never earns its own sentence
+      outside the brackets.
     signals:
       - at least one parenthetical in most paragraphs
       - parentheses carrying tonal as well as informational content
-      - e.g. and etc appearing inside parentheses
+      - e.g., i.e., and etc appearing inside parentheses
+      - occasional sentence-length parenthetical carrying a personal aside
+      - parenthetical stage directions such as (*ahem) or (no shame)
     do:
       - put the qualification, alternative, or aside in parentheses
       - use a parenthetical where you would otherwise reach for an em dash
@@ -770,29 +1063,47 @@ features:
         Right? (right?)
       - >-
         Sign up for a free Jira account (Notion works, too)
+      - >-
+        (Fun fact, I've started playing guitar again because the little gaps in
+        between when the agents need me is perfect for practicing scales)
+      - >-
+        After a couple weeks of part time grinding (made possible by AI agents
+        that code when I'm doing other stuff), I have a pretty sweet setup in
+        AWS.
+      - >-
+        those who don't know how to build software (no shame) and those who do
+      - >-
+        Instead of popping blood vessels cursing their agents when they do dumb
+        things (*ahem)
 
   - name: no_em_dashes
     category: anti-patterns
     weight: 0.85
     variability: 0.05
+    # Re-verified 2026-08-24 against both sources, ~6450 words: zero em dashes
+    # and zero en dashes in his own prose. The single em dash in the corpus is
+    # inside a quoted Claude message. This is the single most reliable
+    # mechanical test of whether a draft is in his voice.
     description: >-
       Does not use em dashes. Across the entire corpus not one appears in his
       own prose; the only instance is inside quoted machine output. Every job an
-      em dash would do is handled instead by a parenthetical, a comma, or a
-      sentence break. This is one of the most reliable surface markers of the
-      voice.
+      em dash would do is handled instead by a parenthetical, a comma, a
+      sentence break, or a spaced hyphen. This is one of the most reliable
+      surface markers of the voice.
     signals:
-      - complete absence of em dashes
+      - complete absence of em dashes and en dashes
       - parentheses and periods doing the interruption work
       - commas where a dash would conventionally appear
+      - a spaced single hyphen where a dash is genuinely wanted
     do:
       - use parentheses for asides
       - use a period and a new short sentence for a sharp turn
       - use a comma for a mild aside
+      - use a spaced single hyphen when the sentence really needs a dash
     avoid:
       - em dashes in any position
       - double hyphens standing in for em dashes
-      - spaced en dashes as a substitute
+      - en dashes, spaced or unspaced
     evidence:
       - >-
         This is inefficient because agents take a bit of time to remember things
@@ -803,10 +1114,61 @@ features:
       - >-
         Yeesh. My little brain has trouble just understanding the title.
 
+  - name: spaced_hyphen_as_dash
+    category: punctuation
+    weight: 0.75
+    variability: 0.30
+    # Added 2026-08-24. The first corpus was too small to show this; the second
+    # contains ten instances across nine posts. It is the missing half of
+    # no_em_dashes, which previously listed dash substitutes as things to avoid
+    # without saying what he actually reaches for.
+    description: >-
+      Where a sentence genuinely wants a dash, he types a single hyphen with a
+      space on each side. It does the work of appositive, afterthought,
+      elaboration, and correction. It is never doubled, never closed up against
+      the words, and never an en dash or em dash.
+
+      The construction it most often introduces is a trailing qualifier that
+      narrows or grounds what came before, and the qualifier is usually a
+      fragment rather than a clause.
+    signals:
+      - a lone hyphen surrounded by single spaces mid-sentence
+      - the material after it is often a fragment
+      - it trails rather than interrupts, appearing late in the sentence
+      - never paired as a matched set the way em dashes would be
+    do:
+      - use " - " when a dash is unavoidable
+      - put the narrowing or grounding detail after it
+      - keep what follows short
+    avoid:
+      - em or en dashes for this job
+      - double hyphens
+      - closing the hyphen up against the surrounding words
+      - using two of them in one sentence as a matched pair
+    evidence:
+      - >-
+        My inspiration this week was surf fishing in Montauk Point, NY - one of
+        my favorite hobbies.
+      - >-
+        standing on slippery rocks in the ocean - often at night
+      - >-
+        The problem is that as a McBrain gets big, a 2D graph viz becomes
+        useless - it just looks like a hairball.
+      - >-
+        Maybe High Hoper isn't a good moniker for Steve because he's not hoping
+        for anything - he builds the future and makes it freely available.
+      - >-
+        Curated knowledge bases are excellent information sources - think of them
+        as textual databases that are usable by AI.
+      - >-
+        I love having agents coding day and night but probably look at my phone a
+        bit too much - while cooking, at the gym, when I wake up in the middle of
+        the night, etc.
+
   - name: trailing_ellipsis_as_beat
     category: punctuation
-    weight: 0.60
-    variability: 0.50
+    weight: 0.70
+    variability: 0.40
     description: >-
       Uses an ellipsis mid-sentence, without surrounding spaces, as a pause for
       comic or rhetorical timing. It marks hesitation or a swerve, never
@@ -828,6 +1190,15 @@ features:
         contents.
       - >-
         It's like a real social network....but without all the hate.
+      - >-
+        There's the Mayor, Rigs, Polecats, Witnesses...zoiks.
+      - >-
+        "I want this thing...let me see if there's an open source tool. Ah,
+        this <repo> is just what I needed!"
+      - >-
+        surf fishing Montauk means standing on slippery rocks in the ocean -
+        often at night)...he can even tell if there's seaweed based on the sound
+        of the waves.
 
   - name: scare_quotes_for_irony
     category: punctuation
@@ -837,17 +1208,26 @@ features:
       Wraps a single word in quotation marks to flag mild irony or to hold a
       loaded term at arm's length. The quoted word is almost always one syllable
       or a short common word, and the irony is gentle rather than sneering.
+
+      The same marks do a second, non-ironic job: naming a term of art on its
+      first appearance, especially a piece of borrowed jargon he is about to
+      use straight. The two uses are told apart by what follows. An ironic
+      quote is left alone; a term-of-art quote is followed by a gloss or by the
+      term being used plainly for the rest of the piece.
     signals:
       - single words in quotation marks
       - the quoted term is conventional or received wisdom
       - no explanation of the irony
+      - borrowed jargon quoted on first use and then used bare afterwards
     do:
       - quote the one word you want to hold at a distance
       - leave the irony unexplained
+      - quote a borrowed term on first use, then drop the quotes
     avoid:
       - scare-quoting whole phrases
       - stacking multiple ironized terms in a sentence
       - sneering or dismissive use
+      - keeping the quotes on a term after you have introduced it
     evidence:
       - >-
         During breaks in my "real" work, I'll check in and nudge them this way
@@ -857,21 +1237,41 @@ features:
         "correct" software
       - >-
         include the "why" as well as the "what"
+      - >-
+        Both feel you can achieve the same degree of quality as Control Freaks by
+        having a solid coding "harness" and throwing enough tokens at the
+        problem.
+      - >-
+        "Progressive disclosure" has become a defining technique in agentic
+        engineering
+      - >-
+        if 2025 was the year of "AI literacy"
 
-  - name: sparing_exclamation_at_the_close
+  - name: sparing_exclamations
     category: punctuation
     weight: 0.60
     variability: 0.35
+    # Renamed from sparing_exclamation_at_the_close on 2026-08-24. The rate was
+    # right (9 across 20 posts) but the placement claim was not: exclamations
+    # land mid-piece as often as at the end, and three of the nine are inside
+    # quoted speech rather than in his own voice.
     description: >-
-      Exclamation points are rare and cluster at the end of a piece or on a
-      genuine reaction. Roughly one per piece at most. They never appear on
-      claims or in the body of an argument.
+      Exclamation points are rare, roughly one per piece at most, and attach to
+      a genuine reaction rather than to a claim. They never appear in the body
+      of an argument.
+
+      Placement is not fixed. They land on a closing beat, on a mid-piece
+      moment of surprise or delight, or inside quoted speech, which is where a
+      noticeable share of them sit: he will let a quoted person, or a quoted
+      version of himself, exclaim where his own narration would not.
     signals:
       - at most one exclamation point per piece
-      - exclamation attached to the closing line
+      - exclamation attached to a reaction, wherever it falls
+      - a share of them occurring inside quotation marks
       - declaratives in the body end with periods
     do:
-      - reserve the exclamation point for the closer or a real reaction
+      - reserve the exclamation point for a real reaction
+      - let quoted speech carry the exclamation when narration would look breathless
       - keep the body of the argument on periods
     avoid:
       - exclamation points on factual claims
@@ -884,6 +1284,13 @@ features:
         This happens more than you'd think!
       - >-
         Yikes, I better sign my kid up for fall sports!
+      - >-
+        One night earlier in the summer he caught 16 striped bass to my 3. And we
+        were standing 50 ft apart!
+      - >-
+        I heard of one telling their employees, "Opus is not allowed!"
+      - >-
+        the say "OMG, look how far it got!"
 
   - name: contractions_throughout
     category: grammar
@@ -915,8 +1322,8 @@ features:
 
   - name: comfortable_semicolon_use
     category: punctuation
-    weight: 0.45
-    variability: 0.45
+    weight: 0.55
+    variability: 0.40
     # Corrected 2026-08-23 after author pushback. The earlier version of this
     # feature (rare_semicolons) read the low raw count in a short-form corpus
     # as deliberate avoidance and instructed a model to default to periods.
@@ -926,11 +1333,12 @@ features:
     author_confirmed: true
     description: >-
       Uses semicolons, correctly and unselfconsciously, inside an otherwise
-      casual register. Three appear in the corpus and each does a different
+      casual register. Five appear across the corpus and each does a different
       job, which indicates range rather than a single habit. They bind two
-      short mirrored clauses, separate parallel readings of a statistic, and
-      chain numbered items within one dictated instruction. The raw count is
-      low because the pieces are short, not because the mark is avoided.
+      short mirrored clauses, separate parallel readings of a statistic, chain
+      numbered items within one dictated instruction, split a claim from its
+      consequence, and introduce a gloss ahead of an i.e. The raw count is low
+      because the pieces are short, not because the mark is avoided.
 
       The effect is a writer who is plainly at ease with punctuation while
       writing in a spoken register. That combination is part of the voice.
@@ -962,31 +1370,56 @@ features:
         non-actionable emails; 3. Read those that pass the filter; 4. Classify
         via our taxonomy (bundle the taxonomy in the skill); 5. Add tasks to
         Jira
+      - >-
+        Something that happens when you get into a groove with coding agents is
+        going on side-quests; i.e. smallish non-work tasks that are fun and
+        educational.
+      - >-
+        Engineering leads regularly give up control over code, but that doesn't
+        mean giving up control of the product; they still need to know what's
+        going on.
 
   - name: no_typographic_emphasis
     category: anti-patterns
-    weight: 0.55
-    variability: 0.15
+    weight: 0.50
+    variability: 0.20
+    # Corrected 2026-08-24. The original blanket ban on capitals was wrong. Two
+    # single-word all-caps emphases appear in ~4700 words of new material. The
+    # ban on bold and italics held completely and remains absolute.
     description: >-
-      Never uses bold, italics, or capitalization for emphasis. Emphasis is
-      carried entirely by word order, sentence length, and paragraph breaks.
-      The only styled text in the corpus is list structure.
+      Never uses bold or italics. Emphasis is carried almost entirely by word
+      order, sentence length, and paragraph breaks, and the only styled text in
+      the corpus is list structure.
+
+      The one exception is capitalization, and it is a narrow one. Roughly once
+      every few thousand words a single short word is set in capitals to mark
+      the stress a speaker would put on it. It is always one word, never a
+      phrase, and always a quantifier or intensifier rather than the content
+      word of the sentence. Used more than once in a piece it stops sounding
+      like him.
     signals:
       - absence of bold and italic markup
-      - absence of all-caps words
-      - emphasis achieved through placement and brevity
+      - at most one all-caps word in a piece, often none
+      - the capitalized word is a quantifier or intensifier, not the subject
+      - emphasis otherwise achieved through placement and brevity
     do:
       - put the emphatic word at the end of the sentence
       - isolate an emphatic sentence in its own paragraph
+      - allow at most one single-word capitalization where speech would stress it
     avoid:
       - bold or italics for emphasis
-      - capitalized words
+      - capitalizing more than one word, or a whole phrase
+      - more than one capitalized word per piece
       - emphasis markup of any kind
     evidence:
       - >-
         And when it exhausts, poof. That's it.
       - >-
         Still bullish on the power of human creativity.
+      - >-
+        Frontier model companies pump out a LOT of docs.
+      - >-
+        This is SUCH a double-edged-sword.
 
   # ============================================================
   # DICTION
@@ -1027,10 +1460,21 @@ features:
       - >-
         Once you do, agents fly around effortlessly, coding things up according
         to the docs.
+      - >-
+        After a couple weeks of part time grinding (made possible by AI agents
+        that code when I'm doing other stuff), I have a pretty sweet setup in AWS.
+      - >-
+        It's a way to manage umpteen coding agents doing your bidding.
+      - >-
+        as a McBrain gets big, a 2D graph viz becomes useless - it just looks
+        like a hairball
+      - >-
+        Building an enterprise app for LLM Wikis has been a fun learning
+        experience because now I'm able to whip them up so quickly.
 
   - name: named_specific_tools_and_products
     category: diction
-    weight: 0.85
+    weight: 0.90
     variability: 0.15
     description: >-
       Names the actual product, company, model, standard, or file at every
@@ -1061,6 +1505,18 @@ features:
         API keys exported to your environment are visible by every process your
         shell spawns, so a coding agent that runs env, printenv, or a debug
         script writes the plaintext key straight into the session transcript.
+      - >-
+        I've been doing this a lot lately by indexing open source software using
+        the Codebase Memory MCP.
+      - >-
+        It's amazing. I love it, AI agents love it, and 24k+ other people love it
+        according to its GitHub stars.
+      - >-
+        Claude Code's /remote-control feature lets you control your laptop's
+        coding session from your phone.
+      - >-
+        we saw a glimpse of that last week with the release of Claude Code
+        Workflows
 
   - name: inline_gloss_teaching
     category: rhetoric
@@ -1074,10 +1530,12 @@ features:
     signals:
       - definitions embedded as appositives
       - called or which is constructions introducing terms
+      - i.e. and e.g. carrying the gloss inline rather than that is or for example
       - no dedicated explanatory paragraph
     do:
       - define the term where it first appears, in the same sentence
       - use an appositive rather than a separate explanatory sentence
+      - use i.e. or e.g. where a spoken aside would go
       - keep the gloss to a handful of words
     avoid:
       - stopping to explain a concept in its own paragraph
@@ -1092,6 +1550,15 @@ features:
       - >-
         The main one is the LLM Wiki concept credited to Andrej Karpathy that
         has caught fire over the past few months.
+      - >-
+        "Adversarial agents", i.e. an AI session that reviews the work of
+        another, are now a core part the development process.
+      - >-
+        going on side-quests; i.e. smallish non-work tasks that are fun and
+        educational
+      - >-
+        SEFAM (Simple Enough For A Manager) is a Claude Skill that helps me
+        quickly understand what my coding agents are doing.
 
   - name: kinetic_homely_metaphors
     category: rhetoric
@@ -1100,12 +1567,16 @@ features:
     description: >-
       Explains technical behavior through physical, domestic, or bodily imagery.
       The metaphors are common-stock and unshowy, and they are used as working
-      description rather than as ornament. Software and models are routinely
-      given bodies, appetites, and memory.
+      description rather than as ornament.
+
+      This covers the kinetic half of the imagery: what software does is
+      described with the verbs of physical work. The related habit of giving
+      agents feelings and a personality is separate and is tracked in
+      anthropomorphized_agents.
     signals:
       - physical verbs applied to software
-      - driving, burning, ripping, firing up, flying around
-      - anthropomorphic framing of models and agents
+      - driving, burning, ripping, firing up, flying around, fanning out
+      - domestic and bodily imagery for machine behavior
     do:
       - reach for a physical or domestic image to explain a mechanism
       - use plain kinetic verbs for what software does
@@ -1128,27 +1599,166 @@ features:
       - >-
         The rabbit hole this week was caused by my coding agent and me
         optimizing something that shouldn't have existed in the first place.
+      - >-
+        a bunch of workers fan out and do research in parallel, then bring
+        everything home
+      - >-
+        as a McBrain gets big, a 2D graph viz becomes useless - it just looks
+        like a hairball
+      - >-
+        Agents are great at flying around your computer and running commands to
+        read bits of files but, as code grows, agents benefit from seeing the
+        forest as well as the trees.
+
+  - name: anthropomorphized_agents
+    category: rhetoric
+    weight: 0.75
+    variability: 0.30
+    # Added 2026-08-24. Present in the first corpus only as one signal line
+    # inside kinetic_homely_metaphors. The second source makes it a habit in
+    # its own right, and one with a distinct grammar: agents get feelings and
+    # life stages, not just physical verbs.
+    description: >-
+      Agents and models are written about as colleagues and creatures. They are
+      born, they get yelled at, they are happy or confused, they love things,
+      they do dumb things, they display intuition. The framing is affectionate
+      and slightly comic, and it does real explanatory work: a session's
+      lifecycle is easier to feel as a birth than as a process start.
+
+      It is never mystical. He anthropomorphizes the behavior while staying
+      plain about the mechanism in the same paragraph, and the affection sits
+      right next to frank descriptions of the thing failing. He will also
+      address an agent in quoted second person as he would a coworker.
+    signals:
+      - agents given emotions, life stages, and appetites
+      - session start and end described as birth, memory, or rebirth
+      - the model credited with intuition, judgment, or skill
+      - quoted direct address to an agent in the register used with a colleague
+      - affection and criticism of the same agent in adjacent sentences
+    do:
+      - describe what an agent does in the language you would use for a colleague
+      - let a session have a lifecycle rather than a status
+      - keep the mechanism plain in the same breath as the personification
+      - quote yourself talking to the agent when that is what happened
+    avoid:
+      - mysticism or claims about machine consciousness
+      - sustained allegory in which the agent becomes a character
+      - cute framing that obscures what the software actually did
+      - personification of abstractions such as the industry or the market
+    evidence:
+      - >-
+        Add a "reorient" skill in your project. This helps new agents have a
+        successful and happy birth.
+      - >-
+        Without it, they'll start every session all bright-eyed and
+        bushy-tailed only to get yelled at (by you) for not remembering what just
+        happened ten minutes ago.
+      - >-
+        Having a skill and starting new sessions by saying "reorient" ensures a
+        happy agent and human.
+      - >-
+        It's amazing. I love it, AI agents love it, and 24k+ other people love
+        it according to its GitHub stars.
+      - >-
+        What's so impressive is the intuition displayed by current models. They
+        are increasingly behaving like skilled engineers, doing things like:
+      - >-
+        "Dude, what did you just do? This is an important feature so I need to
+        understand."
+      - >-
+        Instead of popping blood vessels cursing their agents when they do dumb
+        things (*ahem)
+
+  - name: cross_domain_analogy_pairs
+    category: rhetoric
+    weight: 0.60
+    variability: 0.45
+    # Added 2026-08-24. Distinct from kinetic_homely_metaphors, which is about
+    # verbs. This is about reaching into a named other field for a structural
+    # comparison, often two fields at once.
+    description: >-
+      Explains a software idea by mapping it onto a named other domain, and
+      often supplies two such mappings side by side in one sentence rather than
+      elaborating one. Biology, cooking, driving, and fishing are the recurring
+      sources. Received sayings and adages are used the same way, quoted and
+      then applied to AI.
+
+      The analogy is offered and dropped. It is never sustained across
+      paragraphs, and the mapping is structural rather than decorative: it is
+      there to name a distinction he is about to rely on, not to make the prose
+      vivid.
+
+      When the domain is technical, the same move becomes a taxonomy of
+      alternatives, each summarized in one parallel clause, with his subject
+      arriving last in the list.
+    signals:
+      - two analogies from different fields joined by or in one sentence
+      - the source field named explicitly (in cooking, in biology)
+      - quoted adages applied to AI
+      - parallel one-clause summaries of neighboring technologies
+      - the analogy dropped immediately after it lands
+    do:
+      - name the other field explicitly when you borrow from it
+      - offer a second mapping from a different field if one does not cover it
+      - use the analogy to fix a distinction, then move on
+      - when comparing technologies, give each one clause of the same shape
+    avoid:
+      - extended allegory
+      - unpacking the analogy after making it
+      - returning to the same analogy later in the piece
+      - analogies that flatter rather than explain
+    evidence:
+      - >-
+        It's like recipe vs meal in cooking or genotype vs phenotype in biology.
+      - >-
+        This is a well-known problem and another example of convergent evolution
+        in the field.
+      - >-
+        it's amusing that the old adage, "the wise one doesn't know everything,
+        but knows where to look", applies to AI as well as humans
+      - >-
+        Standard relational databases are great for data inserts, updates, and
+        deletes. Column stores for dimensional star schemas are great for
+        SQL-based analytics. Key-value stores are great for flexibility. LLM
+        Wikis are great for generating relationships between documents and
+        concepts.
+      - >-
+        Driving within your headlights applies to building software with AI
+        agents.
 
   - name: numeric_precision_when_data_present
     category: diction
-    weight: 0.55
-    variability: 0.75
+    weight: 0.65
+    variability: 0.65
     description: >-
       When numbers are in play the prose becomes exact and unadorned. Figures
       are given with direction, magnitude, and baseline, and the register
-      tightens noticeably without becoming formal. This mode is entirely
+      tightens noticeably without becoming formal. This mode is
       context-dependent and absent from most pieces.
+
+      It has two forms. The first is reporting: figures from a real source,
+      each one anchored to what it is measured against. The second is
+      arithmetic done in public: he starts from one number he actually paid,
+      states each assumption in the sentence that uses it, and extrapolates out
+      loud to a figure that makes the stakes legible. The assumptions are
+      always exposed, including the ones he knows are shaky, and the result is
+      offered as an order of magnitude rather than an answer.
     signals:
       - percentages paired with a stated baseline
       - peak-to-trough and indexed framing
       - no rounding to vague quantities
+      - a personally paid figure used as the seed of an extrapolation
+      - every assumption named inline, including the ones being ignored
     do:
       - give the number, its direction, and what it is measured against
       - state the index or baseline explicitly
+      - start from a figure you actually observed and multiply out loud
+      - name each assumption as you use it, and flag what it leaves out
       - keep contractions and plain syntax even in the data passage
     avoid:
       - vague quantifiers such as significantly or dramatically
       - numbers without a stated reference point
+      - extrapolating from an assumption you have not stated
       - formal register creeping in with the statistics
     evidence:
       - >-
@@ -1157,6 +1767,14 @@ features:
       - >-
         Relative to the February 2020 baseline, software development stands at
         -25%, human resources at -6%, and all US postings at +2%.
+      - >-
+        $86. That was the cost of me using Claude Cowork to manage a set of
+        files yesterday. Annualized, that's about $21.5k.
+      - >-
+        If we assume the average employee spends $20/day on AI tokens, 250
+        working days per year (accounting for two weeks of vacation but ignoring
+        agents that run 24/7) a company of 100 people is looking at a bill of
+        $500k for tokens.
 
   # ============================================================
   # RHETORIC AND READER RELATIONSHIP
@@ -1164,24 +1782,33 @@ features:
 
   - name: verbatim_quoting_of_artifacts
     category: rhetoric
-    weight: 0.70
-    variability: 0.45
+    weight: 0.75
+    variability: 0.40
     description: >-
-      Quotes real artifacts at length and unedited, whether that is machine output, the
-      exact prompt to type, a thread title, something said out loud. The quoted
-      material is presented as the evidence itself rather than paraphrased, and
-      is usually introduced with a comma rather than a colon.
+      Quotes real artifacts at length and unedited, whether that is machine
+      output, the exact prompt to type, a thread title, or something said out
+      loud. The quoted material is presented as the evidence itself rather than
+      paraphrased, and is usually introduced with a comma rather than a colon.
+
+      The same device is turned on himself. He quotes what he said to an agent,
+      and what he was thinking at the moment of a decision, in the words he
+      would actually have used, including the false starts. These
+      self-quotations are the main place his prose gets fully colloquial, and
+      they carry the beat that narration would otherwise have to explain.
     signals:
       - block or inline quotes of tool output and prompts
       - exact wording preserved including its awkwardness
       - introduced with a comma before the quotation
+      - quoted first-person thought or speech at the moment of a decision
+      - quoted speech more colloquial than the surrounding narration
     do:
       - paste the actual output, prompt, or title
       - introduce the quote with a short comma-led clause
+      - quote what you said to the agent, in the words you used
       - let the artifact speak instead of summarizing it
     avoid:
       - paraphrasing what a tool said
-      - cleaning up quoted material
+      - cleaning up quoted material, yours or the machine's
       - formal citation apparatus
     evidence:
       - >-
@@ -1196,35 +1823,58 @@ features:
         Tell Claude: "Pull 20 diverse emails from my Inbox and build a taxonomy
         for classifying future emails. Focus on emails that require my attention
         or action."
+      - >-
+        "Dude, what did you just do? This is an important feature so I need to
+        understand."
+      - >-
+        1. "I want this thing...let me see if there's an open source tool. Ah,
+        this <repo> is just what I needed!"
+      - >-
+        I heard of one telling their employees, "Opus is not allowed!"
+      - >-
+        4. "Hey Claude, read how <repo> does this thing and use it for
+        inspiration for building our own version in my app".
 
   - name: direct_second_person_instruction
     category: reader relationship
     weight: 0.70
-    variability: 0.55
+    variability: 0.60
+    # Boundary loosened 2026-08-24. The old rule said second person appears only
+    # where an action is available. The larger sample shows a second, common
+    # use: a generic you that narrates an experience he assumes the reader has
+    # had. The rule that survives is narrower and more accurate.
     description: >-
       Switches to direct address when there is something the reader can do,
       often mid-piece and without transition. The instruction is conditional and
       practical, assumes competence, and does not repeat itself.
 
-      The pronoun boundary is strict. Second person is reserved for
-      instructional passages, where there is a concrete action the reader can
-      take. Narrative, opinion, and observation stay in first person. He does
-      not address the reader while making a claim, and he does not narrate his
-      own work in the second person.
+      Second person has a second job: narrating a shared predicament. He will
+      describe what happens to you when you run four agents at once, or what
+      your agents will do to you without a reorient skill, using you for an
+      experience he has plainly had himself. This is generic you standing in
+      for anyone in the situation, and it is a solidarity move rather than an
+      instruction.
+
+      The boundary that does hold is over belief. He does not use you to tell
+      the reader what to think, conclude, or feel. Opinions and claims stay in
+      first person, and where a piece is arguing rather than teaching or
+      commiserating, the second person disappears entirely.
     signals:
       - unannounced shift from first to second person
-      - you appearing only where an action is available
-      - narrative and opinion passages holding to first person
+      - you appearing where an action is available
+      - generic you narrating a predicament the writer has also had
+      - opinions and claims holding to first person
       - conditional openers such as If you're on a Mac
       - one-pass instructions with no restatement
     do:
       - address the reader directly when there is an actionable move
-      - keep first person for narrative, opinion, and observation
+      - use a generic you to narrate a situation you have been in yourself
+      - keep first person for opinion, judgment, and conclusion
       - lead with the condition that makes the instruction apply
       - state it once and trust it landed
     avoid:
-      - second person outside instructional passages
       - you constructions attached to claims or opinions
+      - telling the reader what they will conclude or believe
       - hedged suggestions such as you might want to consider
       - repeating an instruction in different words
       - imperative lecturing about what the reader should believe
@@ -1235,6 +1885,17 @@ features:
       - >-
         If you're on a Mac, store keys in the macOS Keychain instead and
         retrieve them with a simple helper function.
+      - >-
+        Once you're hooked on Claude Code (or other agentic coding tool), you
+        find yourself spinning up more than one agent at a time. But then your
+        mind starts melting as you flip back and forth.
+      - >-
+        Without it, they'll start every session all bright-eyed and bushy-tailed
+        only to get yelled at (by you) for not remembering what just happened ten
+        minutes ago.
+      - >-
+        You just have to be willing to spend time learning how to use his stuff,
+        or willing to have it break yours by getting in early.
 
   - name: causal_chain_close
     category: rhetoric
@@ -1261,19 +1922,28 @@ features:
 
   - name: playful_rhetorical_questions
     category: rhetoric
-    weight: 0.50
-    variability: 0.55
+    weight: 0.55
+    variability: 0.50
     description: >-
-      Rhetorical questions are rare and always playful rather than persuasive.
-      They are used to mark a wink at the reader, sometimes doubling back on
-      themselves, and never to set up an argument.
+      Rhetorical questions are rare and are playful or genuinely open rather
+      than persuasive. They mark a wink at the reader, sometimes doubling back
+      on themselves, and they are never used to set up a point he then answers.
+
+      A second shape appears in the analytical pieces: a real question followed
+      by a short stack of candidate answers as fragments, offered and left
+      standing. The question is not rhetorical there. He does not know, the
+      stack shows the range he is choosing among, and the piece moves on
+      without resolving it.
     signals:
       - short questions with a comic rather than argumentative function
       - self-answering or self-undermining questions
+      - an open question followed by two or three fragment options
+      - questions left unresolved rather than answered
       - never used as a section opener
     do:
       - use a question to wink, not to persuade
       - allow a question to undercut the sentence before it
+      - stack candidate answers as fragments when you genuinely do not know
     avoid:
       - rhetorical questions as headings or openers
       - questions that set up a point you then explain
@@ -1284,6 +1954,13 @@ features:
         talking about their home life. Right? (right?)
       - >-
         And guess what? Some of the posts are really interesting.
+      - >-
+        But who knows how much orgs should budget for tokens? Avg employee
+        salary + 50%? 25%? 100%?
+      - >-
+        But that's exploring, right?
+      - >-
+        Wait, what?
 
   - name: collaborative_we_with_the_agent
     category: stance
@@ -1316,10 +1993,16 @@ features:
       - >-
         The rabbit hole this week was caused by my coding agent and me
         optimizing something that shouldn't have existed in the first place.
+      - >-
+        "Hey Claude, read how <repo> does this thing and use it for inspiration
+        for building our own version in my app"
+      - >-
+        we debate priorities and designs, we establish joint standards, and
+        ultimately the experts do their thing
 
   - name: recency_timestamping
     category: stance
-    weight: 0.65
+    weight: 0.70
     variability: 0.35
     description: >-
       Anchors the piece to a specific recent moment. This morning, yesterday,
@@ -1348,26 +2031,52 @@ features:
       - >-
         Barely a month later, I'm watching AI agents chat about nonsense on a
         social network built for them, Moltbook.
+      - >-
+        My inspiration this week was surf fishing in Montauk Point, NY - one of
+        my favorite hobbies.
+      - >-
+        $86. That was the cost of me using Claude Cowork to manage a set of files
+        yesterday.
+      - >-
+        After a couple weeks of part time grinding (made possible by AI agents
+        that code when I'm doing other stuff), I have a pretty sweet setup in AWS.
+      - >-
+        Software engineers have spent much of 2026 figuring out how best to scale
+        up productivity through concurrent AI coding sessions.
 
   - name: life_texture_details
     category: personality
-    weight: 0.60
-    variability: 0.60
+    weight: 0.70
+    variability: 0.65
+    # Weight raised 2026-08-24. The first corpus only showed the clause-length
+    # version. The second contains a post whose entire first half is a hobby
+    # story, which changes what this feature licenses.
     description: >-
-      Family and ordinary life appear briefly as texture, usually in a closing
-      or opening beat. The detail is specific, never elaborated, and never used
-      to make a point. It functions as a reminder that a person with a life
-      wrote this.
+      Family, hobbies, and ordinary life appear as texture. Usually this is a
+      clause near the edges of a piece: specific, unelaborated, and not used to
+      make a point.
+
+      Occasionally the personal material is the whole front half of a post, and
+      when it is, it gets the same treatment his technical subjects get. The
+      hobby is described with insider detail and without explanation, another
+      person in it is credited generously, and the software only appears once
+      the story is finished. The story is never converted into a metaphor for
+      the work. It is the reason the work happened, which is a different and
+      smaller claim.
     signals:
-      - passing mention of wife, kid, breaks from work
+      - passing mention of wife, kid, guitar, breaks from work
       - detail dropped and immediately abandoned
       - no lesson drawn from the personal detail
+      - hobby detail given with insider specificity and no glossary
+      - a personal story that motivates the project rather than illustrating it
     do:
       - let one concrete life detail in, near the edges of the piece
       - drop it in a clause and move on
+      - when a hobby is the origin of the work, tell it straight and at length
+      - keep the personal story and the technical point in separate halves
     avoid:
-      - personal anecdote as an extended opening hook
       - drawing a lesson from family life
+      - turning the personal story into an analogy for the work
       - inspirational framing of personal detail
     evidence:
       - >-
@@ -1378,6 +2087,13 @@ features:
       - >-
         During breaks in my "real" work, I'll check in and nudge them this way
         or that.
+      - >-
+        There's a fishing guide down there named Bill who is like the
+        fish-whisperer. He knows where the fish are, what they're eating, what
+        rock to stand on
+      - >-
+        (Fun fact, I've started playing guitar again because the little gaps in
+        between when the agents need me is perfect for practicing scales)
 
   - name: product_mentions_without_pitch
     category: reader relationship
@@ -1404,7 +2120,7 @@ features:
       - calls to action after naming a product
       - pricing, availability, or sign-up language
       - building a piece as a case for your own product
-      - check it out or link in comments
+      - check it out, try it today, or any invitation to adopt it
     evidence:
       - >-
         This is another example of why I built the app, Now I Get It!
@@ -1418,6 +2134,188 @@ features:
         Without getting into boring details, I wanted to show the power of using
         Google's NotebookLM to make videos explaining complex parts of any
         system.
+      - >-
+        McBrain is a proto-app for organizing my work, interests, and personal
+        life.
+      - >-
+        There are lots of interesting technical problems to solve in order to
+        release McBrain as a product, like what constitutes truth, how to manage
+        wiki evolution, and how to make it so much fun to use that nobody cares
+        about the technical guts.
+      - >-
+        I need to do some cost optimizing because research jobs get expensive but
+        other than that it's working well.
+
+  - name: names_people_only_to_credit
+    category: stance
+    weight: 0.65
+    variability: 0.35
+    # Added 2026-08-24. The first corpus contained one Karpathy credit, too
+    # little to separate from named_specific_tools_and_products. The second
+    # source makes the asymmetry unmistakable: real names appear repeatedly and
+    # exclusively in praise, while every criticized party is anonymized.
+    description: >-
+      Named individuals appear in his writing for one purpose: to give them
+      credit. When someone's work is good he says so at length, by name, with
+      the specific reason, and he will spend several paragraphs on it without
+      any of it accruing to himself. Attribution of an idea to its originator is
+      automatic and unprompted.
+
+      The mirror of this is strict. Criticism never carries a name. Companies
+      that made bad calls are "one" or "some companies", and disagreement with a
+      prevailing view is aimed at the view rather than at whoever holds it. The
+      asymmetry is not diplomacy; praise is specific and detailed while
+      criticism is general and short, which is the opposite of the usual
+      commentary reflex.
+
+      Praise stays concrete. It is about what the person built or wrote, never
+      about their importance, and it is often mixed with a frank note about the
+      thing being hard to use or confusing.
+    signals:
+      - full names attached to specific work
+      - ideas credited to their originator in passing
+      - extended appreciation of another person's project
+      - unnamed parties in every critical passage
+      - praise that includes a frank caveat about the work
+    do:
+      - name the person whose idea or tool you are using
+      - say what specifically is good about their work
+      - keep the party anonymous when the point is critical
+      - let praise sit next to an honest difficulty with the same thing
+    avoid:
+      - naming anyone in a critical passage
+      - praise phrased as endorsement of a person's stature
+      - name-dropping without a specific reason for the name
+      - implying closeness to the people you credit
+    evidence:
+      - >-
+        The main one is the LLM Wiki concept credited to Andrej Karpathy that
+        has caught fire over the past few months.
+      - >-
+        A seriously qualified High Hoper is Steve Yegge. He's an engineer's
+        engineer so when he started talking about LLMs fundamentally changing the
+        field, a lot of people tuned in.
+      - >-
+        Maybe High Hoper isn't a good moniker for Steve because he's not hoping
+        for anything - he builds the future and makes it freely available.
+      - >-
+        Bill also hosts an annual fishing tournament where he raises money for a
+        local charity, Kids Need More. All around great guy.
+      - >-
+        I heard of one telling their employees, "Opus is not allowed!" Frankly,
+        that's a reaction, not a strategy.
+      - >-
+        As a result, some companies are already pulling back.
+
+  - name: coined_taxonomies_with_self_placement
+    category: rhetoric
+    weight: 0.50
+    variability: 0.65
+    # Added 2026-08-24. Appears in full form once and in partial form several
+    # times. Weighted as a secondary tendency, but included because when it
+    # appears it dominates the piece and is highly recognizable.
+    description: >-
+      Sorts a messy field into two or three named types, gives each one a
+      memorable informal label, defines it in a sentence or two, and then says
+      which one he is. The labels are plain-English and slightly comic rather
+      than technical, and they are invented for the occasion rather than
+      borrowed.
+
+      Placing himself is the load-bearing part. It converts what would be a
+      taxonomy of other people into a disclosure of his own bias, and it is
+      always the less flattering slot. The other type is then described
+      generously, with its genuine advantages stated, and often personified by a
+      named person he admires.
+
+      He will also question his own coinage in the same piece rather than
+      defending it.
+    signals:
+      - two or three invented type-names, capitalized
+      - one to two sentences of definition per type
+      - explicit self-placement, usually in the less flattering type
+      - the opposing type given real credit
+      - the coinage itself second-guessed later in the piece
+    do:
+      - invent plain-English labels rather than technical ones
+      - define each type briefly before comparing them
+      - say which one you are
+      - give the other type its due in its own paragraph
+      - allow yourself to admit the label does not quite fit
+    avoid:
+      - taxonomies with more than three types
+      - labels that flatter the type you belong to
+      - using the taxonomy to dismiss the other side
+      - defending the coinage once you have doubted it
+    evidence:
+      - >-
+        Basically, you have Control Freaks and High-Hopers.
+      - >-
+        Control Freaks can manage somewhere between 4-8 simultaneous agents
+        before crashing because the cognitive load of checking up on progress is
+        exhausting. I'm a Control Freak.
+      - >-
+        High hopers push the field forward by their optimism.
+      - >-
+        Maybe High Hoper isn't a good moniker for Steve because he's not hoping
+        for anything - he builds the future and makes it freely available.
+      - >-
+        SEFAM (Simple Enough For A Manager) is a Claude Skill that helps me
+        quickly understand what my coding agents are doing.
+
+  - name: links_deferred_to_comments
+    category: reader relationship
+    weight: 0.55
+    variability: 0.45
+    # Added 2026-08-24 to correct an outright error in the previous profile,
+    # which listed "link in comments" as something he never does. It appears six
+    # times in the second source and is his standard handling of links.
+    description: >-
+      Links never appear inline. Where a piece references his own longer write-up,
+      a demo page, a repository, or a standard, the link is put in the post's
+      comments and the body says so in a short clause, usually parenthetical.
+
+      This is a platform habit rather than a rhetorical one, and it is worth
+      distinguishing from a call to action. The clause is a pointer, not a
+      solicitation: no verb telling the reader to click, no promise about what
+      they will get, no positioning of the link as the payoff of the post. The
+      piece is complete without it.
+
+      The same flatness applies to forthcoming work. He will mention that a
+      longer post is coming, in one clause, with no teaser and no promise of a
+      date.
+    signals:
+      - a parenthetical or trailing clause naming the comments
+      - no URLs in the body of a post
+      - the pointer stated in the flattest possible words
+      - forthcoming posts mentioned in a clause without a hook
+    do:
+      - put the link in the comments and say so in a short clause
+      - name what the link is, not why the reader should want it
+      - use a parenthetical for the pointer where it fits
+      - mention a forthcoming post plainly if it is genuinely coming
+    avoid:
+      - URLs in the body
+      - imperatives such as check out the link below
+      - framing the link as the reward for reading
+      - teasing the content of a future post
+    evidence:
+      - >-
+        To make learning Gas Town a bit easier, I wrote a post called A Random
+        Walk Through Gas Town (link in comments).
+      - >-
+        I put a link to the html page in the comments.
+      - >-
+        Sharing a few interesting things about Claude here - links to detailed
+        reports in the comments:
+      - >-
+        I can also do cool stuff, like make web pages or full articles (see
+        comments section for a link to a fun one).
+      - >-
+        There are a bunch of other benefits I'm putting into a blog post (coming
+        soon).
+      - >-
+        I'll share a geek post later about the architecture but the nice part is
+        that it's all wired up to my phone.
 
   # ============================================================
   # ANTI-PATTERNS
@@ -1427,23 +2325,33 @@ features:
     category: anti-patterns
     weight: 0.85
     variability: 0.05
+    # Corrected 2026-08-24. The previous version listed "link in comments" and
+    # promising a future post as things he avoids. Both are things he does
+    # routinely. The real behavior is narrower: no solicitation of engagement,
+    # while plain pointers to material are fine. See links_deferred_to_comments.
     description: >-
       Despite writing mostly for LinkedIn, never asks for comments, likes,
       follows, or shares, and never poses a discussion prompt to the audience.
-      Pieces end where the content ends. There are no hooks, no one-line
-      cliffhanger openers, and no calls to action of any kind.
+      Pieces end where the content ends. There are no hooks and no one-line
+      cliffhanger openers.
+
+      Pointing at a link in the comments, or mentioning that a longer post is
+      coming, is not an exception to this. Those are flat informational clauses
+      with no ask attached. The line is between telling the reader where
+      something is and asking the reader to do something for the post.
     signals:
       - absence of questions directed at the audience
-      - no calls to action
-      - no follow-me or link-in-comments patterns
+      - no requests for engagement of any kind
+      - link pointers stated without an imperative
     do:
       - end the piece when the content is done
       - let the work be the reason to read
+      - point at a link plainly if there is one
     avoid:
       - What do you think or Drop a comment
       - Follow me for more
       - staged one-line hooks before a line break
-      - promising a thread or series
+      - asking the reader to engage in any form
     evidence:
       - >-
         Pretty cool!
@@ -1451,6 +2359,8 @@ features:
         Still bullish on the power of human creativity.
       - >-
         Honestly, I don't need all the math to get the concepts.
+      - >-
+        I put a link to the html page in the comments.
 
   - name: no_moralizing
     category: anti-patterns
@@ -1460,44 +2370,75 @@ features:
       Does not instruct readers on how to feel or what the industry should do.
       Where a piece touches something that invites a lesson, the lesson stays
       personal and specific to what he did.
+
+      He does judge decisions, including other people's, and he does analyze
+      where a whole market is heading. Neither is moralizing, because neither
+      arrives as a prescription for the reader. A judgment lands on a specific
+      choice and is followed by its cost. A forecast is labelled as a guess.
+      Where a genuine value preference surfaces, it is tagged as his own with a
+      hedge such as IMO and left there, rather than being generalized into
+      advice.
     signals:
       - conclusions phrased as personal position
-      - absence of prescriptions for the industry
+      - absence of prescriptions for the reader
+      - judgments aimed at a decision and followed by its consequence
+      - value preferences marked as personal with an explicit hedge
       - lessons scoped to the writer's own case
     do:
       - keep the takeaway scoped to your own experience
       - state a position without prescribing one for others
+      - judge a decision by naming what it costs, not what people ought to value
+      - hedge a personal preference as a preference
     avoid:
       - we as a society constructions
       - telling readers what they should be doing
-      - broad prescriptions about the industry
+      - turning a preference into advice
+      - moral framing of technology choices
     evidence:
       - >-
         I don't know where this will lead, but engineers are having time of
         their lives building software products these days.
       - >-
         I should have asked that question first.
+      - >-
+        But creating beats doom scrolling any day, IMO.
+      - >-
+        You may save 50% off the sticker price but this ignores the cost of
+        re-work on tasks when Sonnet underperforms.
 
   - name: no_antithesis_flourish
     category: anti-patterns
-    weight: 0.55
-    variability: 0.20
+    weight: 0.45
+    variability: 0.25
+    # Weakened 2026-08-24. The old version banned the shape outright. The larger
+    # sample shows the compressed one-clause form does occur, including once as
+    # a deliberate verdict. What stays banned is the two-sentence version and
+    # the triadic fragment, neither of which appears anywhere in either source.
     description: >-
-      Does not use the it-is-not-X-it-is-Y rhetorical construction, nor the
-      three-beat escalating fragment. The one place a not-X-but-Y shape appears,
-      it is doing literal analytical work about what a chart measures, not
-      supplying rhythm. Emphasis never comes from rhetorical patterning.
+      Does not use the two-sentence it-is-not-X-it-is-Y construction, and does
+      not use the three-beat escalating fragment. Emphasis does not come from
+      rhetorical patterning.
+
+      The compressed form, a single clause ending in "X, not Y", does appear a
+      few times. Twice it is doing literal analytical work about what evidence
+      shows. Once it is a genuine verdict on a decision, and there it is the
+      sharpest sentence in the piece precisely because the surrounding prose
+      never does this. It survives at roughly one per piece and only where the
+      contrast is the actual point rather than a way of sounding decisive.
     signals:
-      - absence of antithetical rhetorical constructions
+      - absence of two-sentence antithetical constructions
       - absence of triadic fragment sequences
-      - contrast expressed plainly through ordinary clauses
+      - contrast usually expressed plainly through ordinary clauses
+      - at most one compressed X-not-Y clause, carrying real content
     do:
       - state the contrast plainly in ordinary syntax
-      - use a not-X-but-Y shape only when precision genuinely requires it
+      - use a compressed X-not-Y clause only when the contrast is the point
+      - keep it inside one sentence if you use it at all
     avoid:
       - It's not about A. It's about B.
       - three-part escalating fragments
       - This isn't X. It's Y. constructions
+      - more than one antithesis in a piece
       - anaphora and other patterned repetition for effect
     evidence:
       - >-
@@ -1506,3 +2447,7 @@ features:
       - >-
         Combine this with my own experience, which shows that while AI beats
         humans at coding, engineering is still highly human.
+      - >-
+        Frankly, that's a reaction, not a strategy.
+      - >-
+        It works across what's said in a video and what's shown.
